@@ -1,3 +1,7 @@
+2001-09-18  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Add a handling for multipart message (MIME).
+
 2001-09-16  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.0.3 released.

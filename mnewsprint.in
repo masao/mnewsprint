@@ -46,16 +46,16 @@ my $PrintHeaders = "date,from,to,cc,newsgroups,subject";
 
 my %Bold = ('subject' => 1);
 
-my %Header = ();
-my $Body = '';
-
 main();
 sub main {
     parse_options();
-    mkdir($Tmpdir, 0700) || die "can't create $Tmpdir: $!";
-    parse_message();
+    my $fh = fopen($File);
+    my @tmp = <$fh>;
+    chomp(@tmp);
+    my ($body, %header) = parse_message(@tmp);
     fork && exit;	# Go background
-    create_latex();
+    mkdir($Tmpdir, 0700) || die "can't create $Tmpdir: $!";
+    create_latex($body, %header);
     compile_latex();
 }
 
@@ -79,10 +79,10 @@ sub parse_options() {
     }
 }
 
-sub parse_message() {
-    my $fh = fopen($File);
-    my @tmp = <$fh>;
-    chomp(@tmp);
+sub parse_message(@) {
+    my (@tmp) = @_;
+    my %header = ();
+    my $body = '';
     while (@tmp) {
 	my $line = shift @tmp;
 	last if ($line =~ /^$/);
@@ -95,39 +95,56 @@ sub parse_message() {
 	}
 
 	if ($line =~ /^(\S+):\s*(.*)$/) {
-	    $Header{lc($1)} = $2;
+	    $header{lc($1)} = $2;
 	}
     }
     if (defined($DEBUG)) {
-	foreach my $key (keys %Header) {
-  	    print " $key -> $Header{$key}\n";
+	foreach my $key (keys %header) {
+  	    print " $key -> $header{$key}\n";
 	}
     }
-    @tmp = expand(@tmp);
-    for my $line (@tmp) {
-	$line =~ s/\s+$//;
-	$line = split_line($line);
-	$line = escape_specials($line);
-        # Don't do that if there is an HTML tag at first.
-        if ($line !~ /^[^>]*</ && 
-            $line =~ /^((\s*\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
-	    $line =~ s/^/\\textcolor\{q\}\{/;
-	    $line =~ s/$/\}/;
-        }
-	$Body .= $line . "\n";
+    if (defined($header{'content-type'}) &&
+	$header{'content-type'} =~ m!^multipart/! &&
+	$header{'content-type'} =~ /boundary=(\")?(.+)\1/i) {
+	print STDERR "multipart processing ...\n";
+	my @parts = split(/--$2/, join("\n", @tmp));
+	shift @parts;
+	$body = [];
+	foreach my $part (@parts) {
+	    $part =~ s/^\s+//;
+	    my @tmp = split(/\n/, $part);
+	    push @{$body}, [parse_message(@tmp)];
+	}
+    } else {
+	@tmp = expand(@tmp);
+	for my $line (@tmp) {
+	    $line =~ s/\s+$//;
+	    $line = split_line($line);
+	    $line = escape_specials($line);
+	    # Don't do that if there is an HTML tag at first.
+	    if ($line !~ /^[^>]*</ && 
+                $line =~ /^((\s*\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
+	        $line =~ s/^/\\textcolor\{q\}\{/;
+	        $line =~ s/$/\}/;
+	    }
+	    $body .= $line . "\n";
+	}
+	$body =~ s/\s+$//;
     }
-    $Body =~ s/\s+$//;
+    return ($body, %header);
 }
 
-sub create_latex() {
+sub create_latex($%) {
+    my ($body, %header) = @_;
     my $texfile = "$Tmpdir/mail.tex";
-    my $header_str = format_header();
-    my $realname = get_realname();
+    my $header_str = format_header(%header);
+    my $realname = get_realname(%header);
+    my $subject = escape_specials($header{'subject'});
 
     my $p_width = "145mm";
     my $face_text = "";
-    if (defined $Header{'x-face'}) {
-	$face_text = process_xface();
+    if (defined $header{'x-face'}) {
+	$face_text = process_xface(%header);
 	$p_width = "125mm";
     }
     my $fh = fopen("> $texfile");
@@ -146,7 +163,7 @@ sub create_latex() {
 \\renewcommand{\\baselinestretch}{.85}
 \\pagestyle{fancy}
 \\lhead{\\itshape $realname}
-\\rhead{\\bfseries $Header{'subject'}}
+\\rhead{\\bfseries $subject}
 \\cfoot{}
 \\lfoot{\\itshape\\number\\year-\\number\\month-\\number\\day~~\\thistime}
 \\rfoot{\\itshape Page~\\thepage~/~\\pageref{LastPage}}
@@ -165,17 +182,28 @@ $header_str
 \\end{tabular}
 \\hfill
 $face_text
+EOF
+    if (ref($body) =~ /^ARRAY/) {
+	foreach my $part (@{$body}) {
+	    print $fh "\\vspace{5mm} \\hrule \\vspace{5mm}\n";
+	    print $fh "\\begin{alltt}$$part[0]\\end{alltt}\n";
+	}
+	print $fh "\\end{document}\n";
+    } else {
+	print $fh <<EOF;
 \\vspace{5mm} \\hrule \\vspace{5mm}
-\\begin{alltt}$Body\\end{alltt}
+\\begin{alltt}$body\\end{alltt}
 \\end{document}
 EOF
+    }
     close($fh);
 }
 
-sub process_xface() {
+sub process_xface(%) {
+    my (%header) = @_;
     my $fh = fopen("> $Tmpdir/face_tmp");
-    print $fh $Header{'x-face'};
-
+    print $fh $header{'x-face'};
+    $fh->close;
     # cat face_tmp | ( echo '/* Width=48, Height=48 */' ; uncompface ) | icontopbm | pnmtops > z.ps
     my $face_decoded = `@UNCOMPFACE@ $Tmpdir/face_tmp`;
     $face_decoded =~ s/(0x|,|\s+)//gmo;
@@ -232,27 +260,31 @@ sub compile_latex() {
     }
 }
 
-sub get_realname() {
-    return '' if not defined $Header{'from'};
+sub get_realname(%) {
+    my (%header) = @_;
+    return '' if not defined $header{'from'};
 
-    if ($Header{'from'} =~ /^(\")?(.+)\1?\s*<(\S+)\@(\S+)>/) {
-	return $2;
-    } elsif ($Header{'from'} =~ /^(\S+)\@(\S+)\s*\(([^)]+)\)/) {
-	return $3;
+    my $from = '';
+    if ($header{'from'} =~ /^(\")?(.+)\1?\s*<(\S+)\@(\S+)>/) {
+	$from = $2;
+    } elsif ($header{'from'} =~ /^(\S+)\@(\S+)\s*\(([^)]+)\)/) {
+	$from = $3;
     } else {
-	return $Header{'from'};
+	$from = $header{'from'};
     }
+    return escape_specials($from);
 }
 
-sub format_header() {
+sub format_header(%) {
+    my (%header) = @_;
     my $header_str = '';
     foreach my $h (split(/,/, lc($PrintHeaders))) {
-	if (defined($Header{$h})) {
-	    $Header{$h} = escape_specials($Header{$h});
+	if (defined($header{$h})) {
+	    $header{$h} = escape_specials($header{$h});
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
-	    $header_str .= "$Header{$h} & \\\\\n";
+	    $header_str .= "$header{$h} & \\\\\n";
 	} else {
 	    $header_str .= "\n";
 	}
@@ -288,7 +320,7 @@ sub split_line($) {
 }
 
 sub escape_specials($) {
-    my ($text) = (@_);
+    my ($text) = @_;
     my %specials = ('#' => '\\#',
 		    '$' => '\\$',
 		    '&' => '\\&',
@@ -344,7 +376,7 @@ mnewsprintはE-mailメッセージを整形して印刷するスクリプトです。
 印刷すべきファイルを指定します。
 （デフォルトでは標準入力から読み込みます）
 
-=item B<-H>, -B<--header=LIST>
+=item B<-H>, B<--header=LIST>
 
 出力すべきメール・ヘッダを指定します。
 （デフォルトでは "date,from,to,cc,newsgroups,subject" です）
