@@ -1,5 +1,7 @@
 2002-03-13  Masao Takaku  <masao@ulis.ac.jp>
 
+	* Version 0.2 released.
+
 	* mnewsprint.in: Fix a wrong filename with psnup support.
 
 	* configure.in, mnewsprint.in, INSTALL: Add supports for PSUtils
