@@ -107,13 +107,23 @@ sub parse_message(@) {
 	$header{'content-type'} =~ m!^multipart/! &&
 	$header{'content-type'} =~ /boundary=(\")?(.+)\1/i) {
 	print STDERR "multipart processing ...\n";
-	my @parts = split(/--$2/, join("\n", @tmp));
-	shift @parts;
+	my $boundary = $2;
+	while (@tmp) {
+	    my $line = shift @tmp;
+	    last if $line =~ /^--$boundary/;
+	}
+	my @part = ();
 	$body = [];
-	foreach my $part (@parts) {
-	    $part =~ s/^\s+//;
-	    my @tmp = split(/\n/, $part);
-	    push @{$body}, parse_message(@tmp);
+	for my $line (@tmp) {
+	    if ($line =~ /^--$boundary--$/) {
+		push @{$body}, parse_message(@part);
+		last;
+	    } elsif ($line =~ /^--$boundary$/) {
+		push @{$body}, parse_message(@part);
+		@part = ();
+	    } else {
+		push @part, $line;
+	    }
 	}
     } else {
 	@tmp = expand(@tmp);
