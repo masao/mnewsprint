@@ -184,21 +184,23 @@ $header_str
 $face_text
 \\vspace{5mm} \\hrule \\vspace{5mm}
 EOF
+    create_latex_sub($fh, $mail);
+    print $fh "\\end{document}\n";
+    close($fh);
+}
+
+sub create_latex_sub($$) {
+    my ($fh, $mail) = @_;
     if (ref($$mail{'body'}) =~ /^ARRAY/) {
 	foreach my $part (@{$$mail{'body'}}) {
-	    print $fh <<EOF;
-\\begin{alltt}$$part{'body'}\\end{alltt}
-\\vspace{3mm} \\hrule \\vspace{3mm}
-EOF
+	    create_latex_sub($fh, $part);
+	    print $fh "\\vspace{3mm} \\hrule \\vspace{3mm}";
 	}
-	print $fh "\\end{document}\n";
     } else {
 	print $fh <<EOF;
 \\begin{alltt}$$mail{'body'}\\end{alltt}
-\\end{document}
 EOF
     }
-    close($fh);
 }
 
 sub process_xface(%) {

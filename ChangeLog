@@ -1,3 +1,8 @@
+2001-09-29  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (create_latex_sub): Add a handling for
+	multiple-multipart messages (MIME).
+
 2001-09-21  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in (process_xface): Negate X-Face's bitmap.
