@@ -216,9 +216,19 @@ sub create_latex_sub($$) {
 	    print $fh "\\vspace{3mm} \\hrule \\vspace{3mm}";
 	}
     } else {
-	print $fh <<EOF;
-\\begin{alltt}$$mail{'body'}\\end{alltt}
-EOF
+	if (defined($$mail{'header'}{'content-type'}) &&
+	    $$mail{'header'}{'content-type'} !~ m#^(text|message)/#i) {
+	    print $fh "\\begin{tabular}[t]{rl}\n";
+	    print $fh ("\\bfseries Size: & \\bfseries ",
+		       length($$mail{'body'}), " bytes\\\\\n");
+	    foreach my $h (sort keys %{$$mail{'header'}}) {
+		print $fh (header_ucfirst($h), " & ",
+			   escape_specials($$mail{'header'}{$h}), "\\\\\n");
+	    }
+	    print $fh "\\end{tabular}\n";
+	} else {
+	    print $fh "\\begin{alltt}$$mail{'body'}\\end{alltt}\n";
+	}
     }
 }
 
@@ -288,7 +298,7 @@ sub get_realname(%) {
     return '' if not defined $$header{'from'};
 
     my $from = '';
-    if ($$header{'from'} =~ /^(\")?(.+)\1?\s*<(\S+)\@(\S+)>/) {
+    if ($$header{'from'} =~ /^(\")?(.+)\1\s*<(\S+)\@(\S+)>/) {
 	$from = $2;
     } elsif ($$header{'from'} =~ /^(\S+)\@(\S+)\s*\(([^)]+)\)/) {
 	$from = $3;
