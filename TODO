@@ -6,6 +6,8 @@
 
 * MIME への対応
 
+  - multipart/alternative 対策
+
   - 多国語対応
 
   - 添付ファイル対策

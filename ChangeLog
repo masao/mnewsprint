@@ -1,3 +1,8 @@
+2001-10-13  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Non-text parts should not process non-text parts
+	same as usual parts.
+
 2001-10-07  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Add support for the base64 encoding.

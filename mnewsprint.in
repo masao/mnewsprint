@@ -128,27 +128,34 @@ sub parse_message(@) {
 	    }
 	}
     } else {
+	my $decoded_str = join("\n", @tmp);
 	if (defined($header{'content-transfer-encoding'}) &&
 	    $header{'content-transfer-encoding'} =~ /base64/) {
-	    @tmp = split("\n", decode_base64(join("\n", @tmp)));
+	    $decoded_str = decode_base64($decoded_str);
 	} elsif (defined($header{'content-transfer-encoding'}) &&
 		 $header{'content-transfer-encoding'} =~ /quoted-printable/) {
-	    @tmp = split("\n", decode_qp(join("\n", @tmp)));
+	    $decoded_str = decode_qp($decoded_str);
 	}
-	@tmp = expand(@tmp);
-	for my $line (@tmp) {
-	    $line =~ s/\s+$//;
-	    $line = split_line($line);
-	    $line = escape_specials($line);
-	    # Don't do that if there is an HTML tag at first.
-	    if ($line !~ /^[^>]*</ && 
-                $line =~ /^((\s*\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
-	        $line =~ s/^/\\textcolor\{q\}\{/;
-	        $line =~ s/$/\}/;
+	if (defined($header{'content-type'}) &&
+	    $header{'content-type'} =~ m#^(text|message)/#i) {
+	    @tmp = split("\n", $decoded_str);
+	    @tmp = expand(@tmp);
+	    for my $line (@tmp) {
+		$line =~ s/\s+$//;
+		$line = split_line($line);
+		$line = escape_specials($line);
+		# Don't do that if there is an HTML tag at first.
+		if ($line !~ /^[^>]*</ && 
+		    $line =~ /^((\s*\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
+		    $line =~ s/^/\\textcolor\{q\}\{/;
+		    $line =~ s/$/\}/;
+		}
+		$body .= $line . "\n";
 	    }
-	    $body .= $line . "\n";
+	    $body =~ s/\s+$//;
+	} else {
+	    $body = $decoded_str;
 	}
-	$body =~ s/\s+$//;
     }
     return {"body" => $body, "header" => \%header};
 }
