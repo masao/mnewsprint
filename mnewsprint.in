@@ -108,7 +108,6 @@ sub create_latex() {
     print $fh <<EOF;
 \\documentclass{jsarticle}
 \\usepackage[T1]{fontenc}
-\\usepackage{babel}
 \\usepackage[latin1]{inputenc}
 \\usepackage{cmbright}
 \\usepackage[a4paper,left=20mm,right=20mm,top=18mm,bottom=25mm,headsep=5mm]{geometry}
