@@ -1,3 +1,7 @@
+2001-08-30  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Change formats of header and footer.
+
 2001-08-29  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Fix a bug with --file=FILE option.
