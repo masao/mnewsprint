@@ -137,7 +137,9 @@ sub parse_message(@) {
 	    $decoded_str = decode_qp($decoded_str);
 	}
 	if (defined($header{'content-type'}) &&
-	    $header{'content-type'} =~ m#^(text|message)/#i) {
+	    $header{'content-type'} !~ m#^(text|message)/#i) {
+	    $body = $decoded_str;
+	} else {
 	    @tmp = split("\n", $decoded_str);
 	    @tmp = expand(@tmp);
 	    for my $line (@tmp) {
@@ -153,8 +155,6 @@ sub parse_message(@) {
 		$body .= $line . "\n";
 	    }
 	    $body =~ s/\s+$//;
-	} else {
-	    $body = $decoded_str;
 	}
     }
     return {"body" => $body, "header" => \%header};
