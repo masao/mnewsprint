@@ -1,7 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 ## This is a part of mnewsprint
-## Copyright (C) 2001, Masao Takaku. All rights reserved.
+## Copyright (C) 2001-2004, Masao Takaku. All rights reserved.
 
 bin_SCRIPTS =	mnewsprint
 man_MANS =	mnewsprint.1
