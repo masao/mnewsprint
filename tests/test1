@@ -4,12 +4,12 @@ TMPDIR=.; export TMPDIR
 rm -rf mnewsprint-* result*
 
 for file in msg*; do
-	nkf -em $file | ../mnewsprint -d > /dev/null 2>&1
+	nkf -em $file | ../mnewsprint -d > /dev/null || exit 1
 done;
 
 i=1
 for dir in mnewsprint-*; do
-	mv $dir result$i
+ 	mv $dir result$i
 	i=`expr $i + 1`
 done
 

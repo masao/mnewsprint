@@ -56,6 +56,7 @@ sub main {
     parse_message();
     fork && exit;	# Go background
     create_latex();
+    compile_latex();
 }
 
 sub parse_options() {
@@ -123,6 +124,12 @@ sub create_latex() {
     my $header_str = format_header();
     my $realname = get_realname();
 
+    my $p_width = "145mm";
+    my $face_text = "";
+    if (defined $Header{'x-face'}) {
+	$face_text = process_xface();
+	$p_width = "125mm";
+    }
     my $fh = fopen("> $texfile");
     print $fh <<EOF;
 \\documentclass{@DOCUMENT_CLASS@}
@@ -130,7 +137,7 @@ sub create_latex() {
 \\usepackage[latin1]{inputenc}
 \\usepackage{cmbright}
 \\usepackage[a4paper,left=20mm,right=20mm,top=18mm,bottom=25mm,headsep=5mm]{geometry}
-\\usepackage{lastpage,fancyhdr,misc,graphicx,alltt}
+\\usepackage{lastpage,fancyhdr,scrtime,graphicx,alltt}
 \\usepackage[dvips]{color}
 \\definecolor{q}{gray}{0.4}
 \\def\\ast{{\\tt\\symbol{"2A}}}
@@ -141,30 +148,76 @@ sub create_latex() {
 \\lhead{\\itshape $realname}
 \\rhead{\\bfseries $Header{'subject'}}
 \\cfoot{}
-\\lfoot{\\itshape\\today \\timeofday}
-\\rfoot{\\itshape Page \\thepage\\ / \\pageref{LastPage}}
+\\lfoot{\\itshape\\number\\year-\\number\\month-\\number\\day~~\\thistime}
+\\rfoot{\\itshape Page~\\thepage~/~\\pageref{LastPage}}
 \\renewcommand{\\headrulewidth}{0pt}
 \\fancypagestyle{plain}{%
 \\fancyhf{}
 \\setlength{\\headsep}{1mm}
 \\addtolength{\\footskip}{4mm}
-\\lfoot{\\itshape\\today \\timeofday}
-\\rfoot{\\itshape Page \\thepage\\ / \\pageref{LastPage}}}
+\\lfoot{\\itshape\\number\\year-\\number\\month-\\number\\day~~\\thistime}
+\\rfoot{\\itshape Page~\\thepage~/~\\pageref{LastPage}}}
 \\begin{document}
 \\thispagestyle{plain}
 \\large
-\\begin{tabular}[t]{rp{145mm}}
+\\begin{tabular}[t]{rp{$p_width}l}
 $header_str
 \\end{tabular}
 \\hfill
+$face_text
 \\vspace{5mm} \\hrule \\vspace{5mm}
 \\begin{alltt}$Body\\end{alltt}
 \\end{document}
 EOF
     close($fh);
+}
 
+sub process_xface() {
+    my $fh = fopen("> $Tmpdir/face_tmp");
+    print $fh $Header{'x-face'};
+
+    # cat face_tmp | ( echo '/* Width=48, Height=48 */' ; uncompface ) | icontopbm | pnmtops > z.ps
+    my $face_decoded = `@UNCOMPFACE@ $Tmpdir/face_tmp`;
+    $face_decoded =~ s/(0x|,|\s+)//gmo;
+    # $face_decoded =~ s/([0-9a-f][0-9a-f])/sprintf("%.2x",~$1)/gei;
+    # print STDERR "$face_decoded\n";
+
+    $fh = fopen("> $Tmpdir/face.ps");
+    print $fh <<EOF;
+%!PS-Adobe-2.0 EPSF-2.0
+%%Creator: @PACKAGE@
+%%Title: face.ps
+%%Pages: 1
+%%BoundingBox: 282 357 330 405
+%%EndComments
+%%Page: 1 1
+282 357 translate
+48 48 scale
+48 48 1
+[ 48 0 0 -48 0 48 ]
+{ <
+$face_decoded
+> } image
+showpage
+%%Trailer
+EOF
+
+    my $face_text = <<EOF;
+\\raisebox{4mm}{
+\\begin{minipage}[t]{2cm}
+\\begin{flushright}
+\~ \\\\
+\\includegraphics[height=2cm]{face.ps}
+\\end{flushright}
+\\end{minipage}}
+EOF
+    return $face_text;
+}
+
+sub compile_latex() {
     my $cwd = getcwd();
     chdir($Tmpdir);
+
     for (1, 2) {
 	system("@LATEX@ -interaction=nonstopmode mail.tex > /dev/null 2>&1");
     }
@@ -199,7 +252,7 @@ sub format_header() {
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
-	    $header_str .= "$Header{$h} \\\\\n";
+	    $header_str .= "$Header{$h} & \\\\\n";
 	} else {
 	    $header_str .= "\n";
 	}

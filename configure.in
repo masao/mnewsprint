@@ -5,7 +5,7 @@ dnl $Id$
 dnl
 
 AC_INIT(mnewsprint.in)
-AM_INIT_AUTOMAKE(mnewsprint, 0.0.2)
+AM_INIT_AUTOMAKE(mnewsprint, 0.0.3)
 
 dnl Checks for programs.
 
@@ -95,11 +95,20 @@ else
 *** (Perl 5.6.0 or later version includes Pod::Usage as a standard module)])
 fi
 
+dnl check for compface package
+AC_PATH_PROG(UNCOMPFACE, uncompface, no)
+if test "$UNCOMPFACE" = "no"; then
+    AC_MSG_ERROR([
+*** the compface package is required.
+*** available from <ftp://syseng.anu.edu.au/pub/jaa/compface.tar.gz>])
+fi
+
 dnl Substitutions
 
 AC_SUBST(LATEX)
 AC_SUBST(DVIPS)
 AC_SUBST(DOCUMENT_CLASS)
 AC_SUBST(PERL)
+AC_SUBST(UNCOMPFACE)
 
 AC_OUTPUT(Makefile tests/Makefile mnewsprint, [chmod +x mnewsprint])

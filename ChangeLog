@@ -1,3 +1,14 @@
+2001-09-16  Masao Takaku  <masao@ulis.ac.jp>
+
+	* configure.in: Version 0.0.3 released.
+
+	* configure.in: Add a check for UNCOMPFACE.
+
+	* INSTALL: Add description about compface package.
+
+	* mnewsprint.in: Support "X-Face" header. (requires compface
+	package)
+
 2001-09-06  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Use scrtime.sty to output the time of day.

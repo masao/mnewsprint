@@ -3,7 +3,8 @@
 							たかくまさお
 							masao@ulis.ac.jp
 
-1. このパッケージでは LaTeX2e, Perl5 を利用しています。
+1. このパッケージでは LaTeX2e, Perl5, compface などの外部パッケージを
+   利用しています。
 
   ・Perl5
 	以下から入手できます。
@@ -25,6 +26,14 @@
 	lastpage, fancyhdr, cmbright, geometry, misc
 
 	※注意: ASCII pLaTeX 環境でしかテストしていません。
+
+  ・compface
+	（X-Face ヘッダを扱うのに必要です）
+	ftp://syseng.anu.edu.au/pub/jaa/compface.tar.gz
+	などから入手してください。
+
+	X-Face については、以下のサイトをご覧下さい。
+	http://www.cs.indiana.edu/ftp/faces/
 
 2. configureスクリプトを動かす。
 
