@@ -54,6 +54,19 @@ if test $DOCUMENT_CLASS = "no"; then
     fi
 fi
 
+dnl check for style packages
+AC_MSG_CHECKING(for style packages in LaTeX2e)
+styles="fontenc inputenc cmbright geometry lastpage fancyhdr misc graphicx alltt color"
+for sty in $styles; do
+    if kpsewhich -progname=`basename $LATEX` ${sty}.sty >/dev/null 2>&1; then
+        echo $ac_n "${sty} $ac_c"
+    else
+	AC_MSG_ERROR([
+*** cannot find (${sty}.sty)'s package in LaTeX2e.])
+    fi
+done
+echo
+
 dnl check for Perl5
 AC_ARG_WITH(
     perl5,

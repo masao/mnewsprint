@@ -8,8 +8,9 @@
 	pieces.
 	Change \documentclass{} with DOCUMENT_CLASS.
 
-	* configure.in: Add a new macro looking for LATEX.
-	Add a new macro looking for DOCUMENT_CLASS.
+	* configure.in: Add a new macro to search for LATEX.
+	Add a new macro to search for DOCUMENT_CLASS.
+	Add a new macro to check for some style packages.
 
 2001-08-30  Masao Takaku  <masao@ulis.ac.jp>
 

@@ -18,12 +18,13 @@
   ・LaTeX2e
 	各地のCTANサイトや各種パッケージなどから入手してください。
 
-	また、比較的新しい LaTeX2e 環境を想定していますので、以下のス
-	タイルパッケージもインストールしておく必要があります。
-	lastpage, fancyhdr, cmbright, geometry, lastpage, fancyhdr,
-	misc, alltt
+	また、比較的新しい LaTeX2e 環境を想定していますので、古い環境
+	では以下のスタイルパッケージなどもインストールする必要があるこ
+	とがあります。
 
-	※注意: ASCII platex 環境でしかテストしていません。
+	lastpage, fancyhdr, cmbright, geometry, misc
+
+	※注意: ASCII pLaTeX 環境でしかテストしていません。
 
 2. configureスクリプトを動かす。
 
