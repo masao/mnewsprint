@@ -1,5 +1,7 @@
 2001-08-25  Masao Takaku  <masao@ulis.ac.jp>
 
+	* mnewsprint.in: Exit with --version option
+
 	* mnewsprint.in: Use Cwd
 
 	* mnewsprint.in: Introduce escape_specials()

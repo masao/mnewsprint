@@ -53,6 +53,7 @@ sub parse_options() {
 
     if ($opt_version) {
         print "$PACKAGE $VERSION\n";
+	exit 0;
     }
 }
 
