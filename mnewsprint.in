@@ -1,0 +1,145 @@
+#!@PERL@ -w
+# -*-CPerl-*-
+# $Id$
+
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+
+my $Latex = "@LATEX@";
+
+my $Printer = "@PRINTER@";
+$Printer = "$ENV{'PRINTER'}" if defined($ENV{'PRINTER'});
+
+my $Tmpdir = "/tmp";
+$Tmpdir = "$ENV{'TMPDIR'}" if defined($ENV{'TMPDIR'});
+$Tmpdir .= "/mnewsprint-$$";
+
+my $File = "$Tmpdir/mail.tex";
+
+my $DEBUG = undef;
+
+my $VERSION = "@VERSION@";
+
+my @PrintHeaders = ("From",
+		    "To",
+		    "Cc",
+		    "Subject",
+		    "Date",
+		    "Message-Id",
+		    "Newsgroups");
+my %Bold = ('Subject' => 1);
+
+my %Header = ();
+my $Body = '';
+
+main();
+sub main {
+    parse_options();
+    mkdir($Tmpdir, 0700) || die "can't create $Tmpdir: $!";
+    parse_message();
+    create_latex();
+}
+
+sub parse_options() {
+    my $opt_help = undef;
+    my $opt_version = undef;
+    GetOptions ('P|printer=s'	      => $Printer,
+		'l|latex=s'	      => $Latex,
+		'h|help'              => \$opt_help,
+		'd|debug'             => \$DEBUG,
+                'version'             => \$opt_version,
+                ) || pod2usage(-exitval=>1, -verbose=>0);
+    pod2usage(-exitval => 0, -verbose => 1)
+        if ($opt_help);
+
+    if ($opt_version) {
+        print "imgs2html $VERSION\n";
+    }
+}
+
+sub parse_message() {
+    my @tmp = <>;
+    chomp(@tmp);
+    while (@tmp) {
+	my $line = shift @tmp;
+	last if ($line =~ /^$/);
+
+	while (defined($tmp[0]) && $tmp[0] =~ /^\s+/) {
+            my $nextline = shift @tmp;
+            $line =~ s/([\xa1-\xfe])\s+$/$1/;
+            $nextline =~ s/^\s+([\xa1-\xfe])/$1/;
+            $line .= $nextline;
+	}
+
+	if ($line =~ /^(\S+):\s*(.*)$/) {
+	    $Header{$1} = $2;
+	}
+    }
+    foreach my $key (keys %Header) {
+	print " $key -> $Header{$key}\n";
+    }
+    for my $line (@tmp) {
+	$line =~ s/\{/\\\{/g;
+	$line =~ s/\}/\\\}/g;
+        # Don't do that if there is an HTML tag at first.
+        if ($line !~ /^[^>]*</ && 
+            $line =~ /^((\S{1,10}>)|(\s*[\>\|\:\#]+\s*))+/) {
+	    $line =~ s/^/\\textcolor\{citation\}\{/;
+	    $line =~ s/$/\}/;
+        }
+	$Body .= $line . "\n";
+    }
+}
+
+sub create_latex() {
+    my %PrintHeader = ();
+    foreach my $h (@PrintHeaders) {
+	if (defined($Header{$h})) {
+	    if (defined($Bold{$h})) {
+		$PrintHeader{$h} = "\\bfseries $h & \\bfseries $Header{$h} & \\\\";
+	    } else {
+		$PrintHeader{$h} = "$h & $Header{$h} & \\\\";
+	    }
+	} else {
+	    $PrintHeader{$h} = "";
+	}
+    }
+
+    open (LATEX, ">$File") || die "can't open $File: $!";
+    print LATEX <<EOF;
+\\documentclass{jarticle}
+\\usepackage[T1]{fontenc}
+\\usepackage[english]{babel}
+\\usepackage[latin1]{inputenc}
+\\usepackage[a4paper,nohead,left=20mm,right=20mm,top=20mm,bottom=25mm]{geometry}
+\\usepackage{moreverb,graphicx,alltt}
+\\usepackage[dvips]{color}
+\\definecolor{citation}{gray}{0.3}
+\\setlength{\\parindent}{0mm}
+\\begin{document}
+{\\large
+\\begin{tabular}[t]{rll}
+$PrintHeader{"Date"}
+$PrintHeader{"From"}
+$PrintHeader{"To"}
+$PrintHeader{"Cc"}
+$PrintHeader{"Newsgroups"}
+$PrintHeader{"Subject"}
+\\end{tabular}}
+\\hfill
+\\vspace{5mm} \\hrule \\vspace{5mm}
+\\begin{alltt}$Body\\end{alltt}
+\\end{document}
+EOF
+    close(LATEX);
+
+    chdir($Tmpdir);
+    system("$Latex -interaction=nonstopmode mail.tex");
+    system("$Latex -interaction=nonstopmode mail.tex");
+    system("dvips -o mail.ps mail.dvi");
+    #    system("lpr -P$Printer mail.ps");
+
+    chdir("$Tmpdir/..");
+    # system("rm -rf $Tmpdir");
+}
