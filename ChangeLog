@@ -1,5 +1,7 @@
 2002-04-13  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in: Version 0.3 released.
+
 	* tests/{Makefile.am,msg1,msg2}: Rename /msg*/ to /msg0*/.
 
 	* mnewsprint.in (parse_message): Fix a bug that special characters
