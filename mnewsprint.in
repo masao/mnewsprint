@@ -106,7 +106,7 @@ sub create_latex() {
 
     my $fh = fopen("> $texfile");
     print $fh <<EOF;
-\\documentclass{jsarticle}
+\\documentclass{@DOCUMENT_CLASS@}
 \\usepackage[T1]{fontenc}
 \\usepackage[latin1]{inputenc}
 \\usepackage{cmbright}

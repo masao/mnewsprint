@@ -30,6 +30,30 @@ if test "$DVIPS" = "no"; then
 *** LaTeX2e environment are required. (dvips)])
 fi
 
+dnl check for document class for LaTeX2e
+AC_ARG_WITH(
+    document-class,
+    [  --with-document-class=CLS    set document class in LaTeX [search path]],
+    [DOCUMENT_CLASS="$with_document_class"
+    AC_MSG_RESULT(using \\documentclass{$DOCUMENT_CLASS} in LaTeX2e)],
+    DOCUMENT_CLASS=no
+)
+if test $DOCUMENT_CLASS = "no"; then
+    AC_MSG_CHECKING(for document class in LaTeX2e)
+    for cls in jsarticle jarticle article; do
+    	if kpsewhich -progname=`basename $LATEX` ${cls}.cls >/dev/null 2>&1; then
+	    DOCUMENT_CLASS=$cls
+	    break
+	fi
+    done
+    if test "$DOCUMENT_CLASS" = "no"; then
+        AC_MSG_ERROR([
+*** cannot find document class in LaTeX2e.])
+    else
+	AC_MSG_RESULT(\\documentclass{$DOCUMENT_CLASS})
+    fi
+fi
+
 dnl check for Perl5
 AC_ARG_WITH(
     perl5,
@@ -62,6 +86,7 @@ dnl Substitutions
 
 AC_SUBST(LATEX)
 AC_SUBST(DVIPS)
+AC_SUBST(DOCUMENT_CLASS)
 AC_SUBST(PERL)
 
 AC_OUTPUT(Makefile tests/Makefile mnewsprint, [chmod +x mnewsprint])

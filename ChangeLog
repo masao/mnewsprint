@@ -2,8 +2,10 @@
 
 	* mnewsprint.in: Change a regexp for the detection of quotation
 	pieces.
+	Change \documentclass{} with DOCUMENT_CLASS.
 
 	* configure.in: Add a new macro looking for LATEX.
+	Add a new macro looking for DOCUMENT_CLASS.
 
 2001-08-30  Masao Takaku  <masao@ulis.ac.jp>
 
