@@ -53,6 +53,8 @@ $SUPPORT_PSNUP = undef unless $SUPPORT_PSNUP =~ /psnup/i;
 
 my $PsnupOpt = 'auto';
 
+my $GrayOpt = '0.4';
+
 my %Bold = ('subject' => 1);
 
 main();
@@ -76,6 +78,7 @@ sub parse_options() {
 		'P|printer=s'	      => \$Printer,
 		'H|header=s'	      => \$PrintHeaders,
 		'psnup'		      => \$PsnupOpt,
+		'gray'		      => \$GrayOpt,
 		'h|help'              => \$opt_help,
 		'd|debug'             => \$DEBUG,
                 'version'             => \$opt_version,
@@ -200,7 +203,7 @@ sub create_latex(\%) {
 \\usepackage[a4paper,left=20mm,right=20mm,top=18mm,bottom=25mm,headsep=5mm]{geometry}
 \\usepackage{lastpage,fancyhdr,scrtime,graphicx,alltt}
 \\usepackage[dvips]{color}
-\\definecolor{q}{gray}{0.4}
+\\definecolor{q}{gray}{$GrayOpt}
 \\def\\ast{{\\tt\\symbol{"2A}}}
 \\def\\bs{{\\tt\\symbol{"5C}}}
 \\setlength{\\parindent}{0mm}
@@ -444,7 +447,7 @@ mnewsprint - E-mail メッセージの整形印刷ツール
 =head1 SYNOPSIS
 
 mnewsprint [B<--printer=PRINTER>] [B<--file=FILE>] [B<--header=LIST>]
-    [B<--psnup=OPTION>] [B<--help>] [B<--version>]
+    [B<--psnup=OPTION>] [B<--gray=NUM>] [B<--help>] [B<--version>]
 
 =head1 DESCRIPTION
 
@@ -480,6 +483,11 @@ psnup コマンドを使って整形するためのオプションを指定します。
 います。また、 "none" の場合は、psnup コマンドを利用しません。それ以外
 の場合は、そのまま psnup コマンドのオプションになります。常に一定のレ
 イアウトを指定したい場合は、--psnup=-2 などのように指定してください。
+
+=item B<--gray=NUM>
+
+引用部分のグレースケールの濃さを 0 〜 1 の数値（0:白, 1:黒）で示します。
+（デフォルトでは 0.4 です）
 
 =back
 

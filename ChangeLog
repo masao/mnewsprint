@@ -1,5 +1,10 @@
 2002-06-03  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in: Version 0.6 released.
+	
+	* mnewsprint.in: Add a new option "--gray" that specify the level
+	of grayscale-color for quotation parts.
+	
 	* mnewsprint.in: Accept "--psnup=none" option to disable psnup
 	command.
 

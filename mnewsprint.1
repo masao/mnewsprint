@@ -93,7 +93,7 @@
 .nr % 0
 .rr F
 .\}
-.TH MNEWSPRINT 1 "mnewsprint 0.5" "3/Jun/2002" "mnewsprint"
+.TH MNEWSPRINT 1 "mnewsprint 0.6" "3/Jun/2002" "mnewsprint"
 .UC
 .if n .hy 0
 .if n .na
@@ -191,7 +191,7 @@
 mnewsprint \- E\-mail メッセージの整形印刷ツール
 .SH "SYNOPSIS"
 mnewsprint [\fB--printer=PRINTER\fR] [\fB--file=FILE\fR] [\fB--header=LIST\fR]
-    [\fB--psnup=OPTION\fR] [\fB--help\fR] [\fB--version\fR]
+    [\fB--psnup=OPTION\fR] [\fB--gray=NUM\fR] [\fB--help\fR] [\fB--version\fR]
 .SH "DESCRIPTION"
 mnewsprintはE\-mailメッセージを整形して印刷するスクリプトです。
 .SH "OPTIONS"
@@ -213,6 +213,9 @@ psnup コマンドを使って整形するためのオプションを指定します。
 います。また、 \*(L"none\*(R" の場合は、psnup コマンドを利用しません。それ以外
 の場合は、そのまま psnup コマンドのオプションになります。常に一定のレ
 イアウトを指定したい場合は、--psnup=\-2 などのように指定してください。
+.Ip "\fB--gray=\s-1NUM\s0\fR" 4
+引用部分のグレースケールの濃さを 0 〜 1 の数値（0:白, 1:黒）で示します。
+（デフォルトでは 0.4 です）
 .SH "PREREQUISITES"
 このスクリプトはメールの整形に LaTeX2e を利用します。
 .SH "NOTES"
@@ -239,6 +242,8 @@ psnup コマンドを使って整形するためのオプションを指定します。
 .IX Item "\fB\-H\fR, \fB--header=\s-1LIST\s0\fR"
 
 .IX Item "\fB--psnup=\s-1OPTION\s0\fR"
+
+.IX Item "\fB--gray=\s-1NUM\s0\fR"
 
 .IX Header "PREREQUISITES"
 
