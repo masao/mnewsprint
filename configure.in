@@ -115,5 +115,6 @@ AC_SUBST(DVIPS)
 AC_SUBST(DOCUMENT_CLASS)
 AC_SUBST(PERL)
 AC_SUBST(UNCOMPFACE)
+AC_SUBST(PSNUP)
 
 AC_OUTPUT(Makefile tests/Makefile mnewsprint, [chmod +x mnewsprint])
