@@ -103,7 +103,7 @@ EOF
     exit($status);
 }
 
-sub parse_message(@) {
+sub parse_message {
     my (@tmp) = @_;
     my %header = ();
     my $body = '';
@@ -236,7 +236,7 @@ EOF
     close($fh);
 }
 
-sub create_latex_sub($$) {
+sub create_latex_sub {
     my ($fh, $mail) = @_;
     if (ref($$mail{'body'}) =~ /^ARRAY/) {
 	foreach my $part (@{$$mail{'body'}}) {
