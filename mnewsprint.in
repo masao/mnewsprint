@@ -365,7 +365,7 @@ sub format_header(%) {
 # Content-Type
 sub is_textual_message ($) {
     my ($type) = @_;
-    return undef unless defined $type;
+    return 1 unless defined $type;
     if ($type =~ m#^(text|message)#i) {
 	return 1;
     } else {
