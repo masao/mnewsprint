@@ -15,8 +15,6 @@ for dir in mnewsprint-*; do
 	i=`expr $i + 1`
 done
 
-for i in $files; do
-	grep '^!' "result$i/mail.log" && exit 1
-done
+find . -name 'mail.log' -print | xargs grep '^!' && exit 1
 
 exit 0

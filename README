@@ -28,7 +28,7 @@ mnewsprint はメール記事を整形して印刷するためのツールです。
 
 mnewsprint(1) を参照してください。
 
-mnews では ~/.mnews_setup 中に以下の設定を加えることで使えます。
+mnews で使うには ~/.mnews_setup 中に以下の設定を加えて下さい。
 
       lpr_command: nkf -em | mnewsprint
 
