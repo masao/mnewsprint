@@ -1,3 +1,8 @@
+2002-06-03  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Accept "--psnup=none" option to disable psnup
+	command.
+
 2002-05-27  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.5 released.

@@ -309,7 +309,7 @@ sub compile_latex() {
 
     system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
 
-    if (defined($SUPPORT_PSNUP)) {
+    if (defined($SUPPORT_PSNUP) && $PsnupOpt ne 'none') {
 	if ($PsnupOpt eq 'auto') {
 	    my $lastpage = get_lastpage();
 	    $PsnupOpt = "";
@@ -477,8 +477,9 @@ psnup コマンドを使って整形するためのオプションを指定します。
 （デフォルトでは "auto" です）
 
 "auto" の場合は、ページ数に応じて、-2, -4 などのレイアウトを自動的に行
-います。常に一定のレイアウトを指定したい場合は、--psnup=-2 などのよう
-に指定してください。
+います。また、 "none" の場合は、psnup コマンドを利用しません。それ以外
+の場合は、そのまま psnup コマンドのオプションになります。常に一定のレ
+イアウトを指定したい場合は、--psnup=-2 などのように指定してください。
 
 =back
 
