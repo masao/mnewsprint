@@ -122,10 +122,10 @@ sub parse_message(@) {
 	}
     }
     if (defined($header{'content-type'}) &&
-	$header{'content-type'} =~ m!^multipart/! &&
-	$header{'content-type'} =~ /boundary=(\")?(.+)\1/i) {
+	$header{'content-type'} =~ m#^multipart/#i &&
+	$header{'content-type'} =~ m#boundary=(\")?(.+)\1#i) {
 	print STDERR "multipart processing ...\n";
-	my $boundary = $2;
+	my $boundary = quotemeta($2);
 	while (@tmp) {
 	    my $line = shift @tmp;
 	    last if $line =~ /^--$boundary/;

@@ -1,3 +1,8 @@
+2002-04-13  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (parse_message): Fix a bug that special characters
+	is not escaped in a multipart boundary regex.
+
 2002-03-13  Masao Takaku  <masao@ulis.ac.jp>
 
 	* Version 0.2 released.
