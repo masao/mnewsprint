@@ -1,3 +1,8 @@
+2003-06-17  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (parse_message): Add support for multipart
+	messages like 'Content-Type: multipart/mixed;boundary = "----=_NextPart_000_002E_73256659.4E71DEB2"'
+
 2003-04-02  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.7 released.
