@@ -1,0 +1,130 @@
+Seen: 
+Received: (from masao@localhost)
+	by nile.ulis.ac.jp (8.9.3+Sun/8.9.3) id VAA27752
+	for masao; Fri, 26 Apr 2002 21:04:14 +0900 (JST)
+Date: Fri, 26 Apr 2002 21:04:14 +0900 (JST)
+From: Masao Takaku <masao>
+Message-Id: <200204261204.VAA27752@nile.ulis.ac.jp>
+To: masao
+Subject: Output from "cron" command
+Content-Type: text
+Content-Length: 7962
+
+Your "cron" job on nile
+env PATH="/usr/local/bin:$PATH" /home/masao/public_html/ipc-search/update.pl
+
+produced the following output:
+
+古いファイルをバックアップします。... 完了 - Fri Apr 26 21:00:26 JST 2002
+
+文書群を収集します。... 完了 - Fri Apr 26 21:01:47 JST 2002
+
+ファイルの更新日付を調整します。... 完了 - Fri Apr 26 21:01:52 JST 2002
+
+Indexing を行います。
+検索対象のファイルを調べています...
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/ipnews/kasidasi-list.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/DocuHouse_Manual.files/filelist.xml ファイルは削除されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/IE.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/logonoff-windows.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/printerwin.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/DocuHouse_Manual.html ファイルは削除されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/outlook.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/index.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/ipnews/ARCH1/20020419.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/home.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/man/index.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/ipnews/ARCH1/index.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/jishushitu.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/main2002/troublelist.html ファイルは更新されています
+/home/masao/Namazu/ipc-search/www.ulis.ac.jp/ipc/ipnews/ipcnews_new.html ファイルは更新されています
+56個のファイルがインデックス作成の対象として見つかりました
+1/56 - http://www.ulis.ac.jp/ipc/CD-ROM/CD-ROM.html [text/html]
+2/56 - http://www.ulis.ac.jp/ipc/gigabit/Dec15/gigabit-e3.doc 未対応の形式 (application/msword)無視します
+2/55 - http://www.ulis.ac.jp/ipc/gigabit/Dec15/gigabit-h7.doc 未対応の形式 (application/msword)無視します
+2/54 - http://www.ulis.ac.jp/ipc/gigabit/Nov08/gigabit2.doc 未対応の形式 (application/msword)無視します
+2/53 - http://www.ulis.ac.jp/ipc/ipnews/ARCH1/20020426.html [text/html]
+3/53 - http://www.ulis.ac.jp/ipc/main2002/0201/cfi0201.doc 未対応の形式 (application/msword)無視します
+3/52 - http://www.ulis.ac.jp/ipc/main2002/0511/cfd0511.doc 未対応の形式 (application/msword)無視します
+3/51 - http://www.ulis.ac.jp/ipc/main2002/0706/correction.doc 未対応の形式 (application/msword)無視します
+3/50 - http://www.ulis.ac.jp/ipc/main2002/0706/score0706.doc 未対応の形式 (application/msword)無視します
+3/49 - http://www.ulis.ac.jp/ipc/main2002/0706/score0706.htm ファイルが巨大なので無視します
+3/48 - http://www.ulis.ac.jp/ipc/main2002/0706/spec0706.doc ファイルが巨大なので無視します
+3/47 - http://www.ulis.ac.jp/ipc/main2002/0706/spec0706.files/oledata.mso ファイルが巨大なので無視します
+3/46 - http://www.ulis.ac.jp/ipc/main2002/man/Mathematica.html [text/html]
+4/46 - http://www.ulis.ac.jp/ipc/main2002/man/active-mail2.html [text/html]
+5/46 - http://www.ulis.ac.jp/ipc/main2002/man/active-mail2d.html [text/html]
+6/46 - http://www.ulis.ac.jp/ipc/main2002/man/favorites/index.html [text/html]
+7/46 - http://www.ulis.ac.jp/ipc/main2002/man/ulisonly/active-mailman.pdf ファイルが巨大なので無視します
+7/45 - http://www.ulis.ac.jp/ipc/main2002/man/unipasswd.html [text/html]
+8/45 - http://www.ulis.ac.jp/ipc/newmulti/Sogohyok.doc 未対応の形式 (application/msword)無視します
+8/44 - http://www.ulis.ac.jp/ipc/newmulti/sogotoku.xls 未対応の形式 (application/excel)無視します
+8/43 - http://www.ulis.ac.jp/ipc/shoshiki/group.doc 未対応の形式 (application/msword)無視します
+8/42 - http://www.ulis.ac.jp/ipc/shoshiki/group.ps 未対応の形式 (application/postscript)無視します
+8/41 - http://www.ulis.ac.jp/ipc/shoshiki/kiki-sechi.doc 未対応の形式 (application/msword)無視します
+8/40 - http://www.ulis.ac.jp/ipc/shoshiki/kiki-sechi.ps 未対応の形式 (application/postscript)無視します
+8/39 - http://www.ulis.ac.jp/ipc/shoshiki/kyouiku.doc 未対応の形式 (application/msword)無視します
+8/38 - http://www.ulis.ac.jp/ipc/shoshiki/kyouiku.ps 未対応の形式 (application/postscript)無視します
+8/37 - http://www.ulis.ac.jp/ipc/shoshiki/mail-list.doc 未対応の形式 (application/msword)無視します
+8/36 - http://www.ulis.ac.jp/ipc/shoshiki/main.doc 未対応の形式 (application/msword)無視します
+8/35 - http://www.ulis.ac.jp/ipc/shoshiki/main.ps ファイルが巨大なので無視します
+8/34 - http://www.ulis.ac.jp/ipc/shoshiki/network.doc 未対応の形式 (application/msword)無視します
+8/33 - http://www.ulis.ac.jp/ipc/shoshiki/network.ps 未対応の形式 (application/postscript)無視します
+8/32 - http://www.ulis.ac.jp/ipc/shoshiki/nyu-taishutsu-sai.doc 未対応の形式 (application/msword)無視します
+8/31 - http://www.ulis.ac.jp/ipc/shoshiki/nyu-taishutsu-sai.ps 未対応の形式 (application/postscript)無視します
+8/30 - http://www.ulis.ac.jp/ipc/shoshiki/nyu-taishutsu.doc 未対応の形式 (application/msword)無視します
+8/29 - http://www.ulis.ac.jp/ipc/shoshiki/nyu-taishutsu.ps 未対応の形式 (application/postscript)無視します
+8/28 - http://www.ulis.ac.jp/ipc/shoshiki/toku.doc 未対応の形式 (application/msword)無視します
+8/27 - http://www.ulis.ac.jp/ipc/shoshiki/toku1.ps 未対応の形式 (application/postscript)無視します
+8/26 - http://www.ulis.ac.jp/ipc/shoshiki/toku2.ps 未対応の形式 (application/postscript)無視します
+8/25 - http://www.ulis.ac.jp/ipc/shoshiki/toku3.ps 未対応の形式 (application/postscript)無視します
+8/24 - http://www.ulis.ac.jp/ipc/shoshiki/toku4.ps 未対応の形式 (application/postscript)無視します
+8/23 - http://www.ulis.ac.jp/ipc/ulis-lan/anti-virus/nav-win.files/oledata.mso 未対応の形式 (application/msword)無視します
+8/22 - http://www.ulis.ac.jp/ipc/ulis/cgi.ps ファイルが巨大なので無視します
+8/21 - http://www.ulis.ac.jp/ipc/ulis/perl.ps 未対応の形式 (application/postscript)無視します
+8/20 - http://www.ulis.ac.jp/ipc/ipnews/kasidasi-list.html [text/html]
+9/20 - http://www.ulis.ac.jp/ipc/main2002/man/IE.html [text/html]
+10/20 - http://www.ulis.ac.jp/ipc/main2002/man/logonoff-windows.html [text/html]
+11/20 - http://www.ulis.ac.jp/ipc/main2002/man/printerwin.html [text/html]
+12/20 - http://www.ulis.ac.jp/ipc/main2002/man/outlook.html [text/html]
+13/20 - http://www.ulis.ac.jp/ipc/index.html [text/html]
+14/20 - http://www.ulis.ac.jp/ipc/ipnews/ARCH1/20020419.html [text/html]
+15/20 - http://www.ulis.ac.jp/ipc/main2002/man/home.html [text/html]
+16/20 - http://www.ulis.ac.jp/ipc/main2002/man/index.html [text/html]
+17/20 - http://www.ulis.ac.jp/ipc/ipnews/ARCH1/index.html [text/html]
+18/20 - http://www.ulis.ac.jp/ipc/jishushitu.html [text/html]
+19/20 - http://www.ulis.ac.jp/ipc/main2002/troublelist.html [text/html]
+20/20 - http://www.ulis.ac.jp/ipc/ipnews/ipcnews_new.html [text/html]
+インデックスを書き出しています...
+[追加]
+日付:                Fri Apr 26 21:04:11 2002
+追加された文書の数:  7
+削除された文書の数:  2
+更新された文書の数:  13
+サイズ (bytes):      752,955
+合計の文書数:        1,094
+追加キーワード数:    282
+合計キーワード数:    58,615
+わかち書き:          module_chasen -j -F '%m '
+経過時間 (秒):       138
+ファイル/秒:         0.14
+システム:            solaris
+Perl:                5.00503
+Namazu:              2.0.10
+
+完了 - 2002年04月26日 (金) 21時04分12秒 JST
+
+お知らせを更新します。... 完了 - 2002年04月26日 (金) 21時04分12秒 JST
+
+トップページを更新します。... Checking in body.txt;
+/home/masao/.cvsroot/public_html/ipc-search/body.txt,v  <--  body.txt
+new revision: 1.54; previous revision: 1.53
+done
+Checking in index.html;
+/home/masao/.cvsroot/public_html/ipc-search/index.html,v  <--  index.html
+new revision: 1.48; previous revision: 1.47
+done
+完了 - 2002年04月26日 (金) 21時04分14秒 JST
+
+
+
