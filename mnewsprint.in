@@ -152,15 +152,14 @@ sub parse_message(@) {
 		 $header{'content-transfer-encoding'} =~ /quoted-printable/) {
 	    $decoded_str = decode_qp($decoded_str);
 	}
-	if (defined($header{'content-type'}) &&
-	    $header{'content-type'} !~ m#^(text|message)/#i) {
+	if (!is_textual_message($header{'content-type'})) {
 	    $body = $decoded_str;
 	} else {
 	    @tmp = split("\n", $decoded_str);
 	    @tmp = expand(@tmp);
 	    for my $line (@tmp) {
 		$line =~ s/\s+$//;
-		$line = split_line($line);
+		$line = split_line($line, 78);
 		$line = escape_specials($line);
 		# Don't do that if there is an HTML tag at first.
 		if ($line !~ /^[^>]*</ && 
@@ -239,8 +238,7 @@ sub create_latex_sub($$) {
 	    print $fh "\\vspace{3mm} \\hrule \\vspace{3mm}";
 	}
     } else {
-	if (defined($$mail{'header'}{'content-type'}) &&
-	    $$mail{'header'}{'content-type'} !~ m#^(text|message)/#i) {
+	if (!is_textual_message($$mail{'header'}{'content-type'})) {
 	    print $fh "\\begin{tabular}[t]{rl}\n";
 	    print $fh ("\\bfseries Size: & \\bfseries ",
 		       length($$mail{'body'}), " bytes\\\\\n");
@@ -364,19 +362,30 @@ sub format_header(%) {
     return $header_str;
 }
 
+# Content-Type
+sub is_textual_message ($) {
+    my ($type) = @_;
+    return undef unless defined $type;
+    if ($type =~ m#^(text|message)#i) {
+	return 1;
+    } else {
+	return undef;
+    }
+}
+
 sub header_ucfirst($) {
     my ($h) = @_;
     return join('-', map { ucfirst } split('-', $h));
 }
 
-# Split lines to 80-chars per line.
-sub split_line($) {
-    my ($text) = @_;
+# Format a line to fixed-chars per line.
+sub split_line($$) {
+    my ($text, $chars_perline) = @_;
 
     my $res = '';
-    while (length($text) > 80) {
-	my $tmp = substr($text, 0, 80);
-	my $tmp2 = substr($text, 80);
+    while (length($text) > $chars_perline) {
+	my $tmp = substr($text, 0, $chars_perline);
+	my $tmp2 = substr($text, $chars_perline);
 	# considering multi-byte segmentation.
 	if ($tmp =~ /\x8f$/ or $tmp =~ tr/\x8e\xa1-\xfe// % 2) {
 	    $tmp2 = chop($tmp) . $tmp2;

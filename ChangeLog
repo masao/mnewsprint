@@ -1,3 +1,11 @@
+2002-05-02  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (split_line): Change fixed-chars to 78.
+
+	* mnewsprint.in (is_textual_message): Allow a ommision of a
+	"/" in Content-Type header (workaround for a message by Solaris's
+	mail command)
+
 2002-04-13  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.3 released.
