@@ -106,7 +106,7 @@ sub create_latex() {
 
     my $fh = fopen("> $texfile");
     print $fh <<EOF;
-\\documentclass[12pt]{jsarticle}
+\\documentclass{jsarticle}
 \\usepackage[T1]{fontenc}
 \\usepackage{babel}
 \\usepackage[latin1]{inputenc}
