@@ -118,7 +118,7 @@ sub create_latex() {
 \\def\\ast{{\\tt\\symbol{"2A}}}
 \\def\\bs{{\\tt\\symbol{"5C}}}
 \\setlength{\\parindent}{0mm}
-\\renewcommand{\\baselinestretch}{.8}
+\\renewcommand{\\baselinestretch}{.9}
 \\pagestyle{fancy}
 \\lhead{\\itshape $realname}
 \\rhead{\\bfseries $Header{'subject'}}
