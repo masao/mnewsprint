@@ -1,3 +1,7 @@
+2001-08-24  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Replace '&' into '\&' in header strings
+
 2001-08-21  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Replace \ --> \\bs{}.

@@ -145,6 +145,7 @@ sub format_header() {
     my $header_str = '';
     foreach my $h (split(/,/, lc($PrintHeaders))) {
 	if (defined($Header{$h})) {
+	    $Header{$h} =~ s/&/\\&/g;
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
