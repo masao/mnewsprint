@@ -23,7 +23,7 @@
 	では以下のスタイルパッケージなどもインストールする必要があるこ
 	とがあります。
 
-	lastpage, fancyhdr, cmbright, geometry, misc
+	lastpage, fancyhdr, cmbright, geometry, scrtime
 
 	※注意: ASCII pLaTeX 環境でしかテストしていません。
 

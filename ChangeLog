@@ -1,5 +1,7 @@
 2001-10-28  Masao Takaku  <masao@ulis.ac.jp>
 
+	* INSTALL: Up-to-date a list about required LaTeX2e packages.
+
 	* configure.in, mnewsprint.in, INSTALL : Abolish uses of
 	Pod::Usage module.
 
