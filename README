@@ -1,0 +1,42 @@
+    § mnewsprint : Formatting and Printing Utility for E-mail Message §
+
+mnewsprint はメール記事を整形して印刷するためのツールです。
+整形にはLaTeX2eを利用します。
+
+[機能]
+
+ * LaTeX2eによる*比較的*きれいな出力。
+ 
+ * 出力ヘッダを指定可能。
+ 
+ * メールの引用部分を自動的にグレイで出力。
+
+[インストール方法]
+
+	% ./configure
+	% make
+	% make install
+
+としてインストールしてください。デフォルトでは、
+
+	/usr/local/bin/mnewsprint
+	           man/man1/mnewsprint.1
+
+にインストールされます。
+
+[使い方 & 設定]
+
+mnewsprint(1) を参照してください。
+
+mnews では ~/.mnews_setup 中に以下の設定を加えることで使えます。
+
+      lpr_command: nkf -em | mnewsprint
+
+その他のMUA（Muttなど）でも同様の設定を加えることで使えるようになると思います。
+
+[連絡先]
+
+バグ報告・要望・感想などは masao@ulis.ac.jp までお寄せ下さい。
+お気軽にどうぞ。
+
+$Id$
