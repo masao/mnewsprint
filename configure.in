@@ -5,7 +5,7 @@ dnl $Id$
 dnl
 
 AC_INIT(mnewsprint.in)
-AM_INIT_AUTOMAKE(mnewsprint, 0.1)
+AM_INIT_AUTOMAKE(mnewsprint, 0.2)
 
 dnl Checks for programs.
 
@@ -95,9 +95,17 @@ fi
 dnl check for compface package
 AC_PATH_PROG(UNCOMPFACE, uncompface, no)
 if test "$UNCOMPFACE" = "no"; then
-    AC_MSG_ERROR([
-*** the compface package is required.
+    AC_MSG_WARN([
+*** If you need to support 'X-Face:' header, the compface package is required.
 *** available from <ftp://syseng.anu.edu.au/pub/jaa/compface.tar.gz>])
+fi
+
+dnl check for psutils package
+AC_PATH_PROG(PSNUP, psnup, no)
+if test "$PSNUP" = "no"; then
+    AC_MSG_WARN([
+*** If you need to support 2-up printouts, the PSUtils package is required.
+*** available from <http://www.tardis.ed.ac.uk/~ajcd/psutils/>])
 fi
 
 dnl Substitutions

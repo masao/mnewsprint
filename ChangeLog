@@ -1,3 +1,8 @@
+2002-03-13  Masao Takaku  <masao@ulis.ac.jp>
+
+	* configure.in, mnewsprint.in, INSTALL: Add supports for PSUtils
+	and compface packages.
+
 2001-10-28  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.1 released.

@@ -45,10 +45,17 @@ my $File = "-";		# default is STDIN
 
 my $PrintHeaders = "date,from,to,cc,newsgroups,subject";
 
+my $SUPPORT_XFACE = "@UNCOMPFACE@";
+$SUPPORT_XFACE = undef unless $SUPPORT_XFACE =~ /uncompface/i;
+
+my $SUPPORT_PSNUP = "@PSNUP@";
+$SUPPORT_PSNUP = undef unless $SUPPORT_PSNUP =~ /psnup/i;
+
 my %Bold = ('subject' => 1);
 
 main();
 sub main {
+    print STDERR "main\n";
     parse_options();
     my $fh = fopen($File);
     my @tmp = <$fh>;
@@ -179,7 +186,7 @@ sub create_latex(\%) {
 
     my $p_width = "145mm";
     my $face_text = "";
-    if (defined $$mail{'header'}{'x-face'}) {
+    if (defined $$mail{'header'}{'x-face'} && defined($SUPPORT_XFACE)) {
 	$face_text = process_xface($$mail{'header'});
 	$p_width = "120mm";
     }
@@ -299,7 +306,13 @@ sub compile_latex() {
     for (1, 2) {
 	system("@LATEX@ -interaction=nonstopmode mail.tex > /dev/null 2>&1");
     }
+
     system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
+
+    if (defined($SUPPORT_PSNUP) && get_lastpage() > 1) {
+	system("$SUPPORT_PSNUP -2 mail.ps 2up.ps > /dev/null 2>&1");
+	rename("2up.ps", "mailps") || die "rename failed: $!";
+    }
 
     system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
 
@@ -323,6 +336,16 @@ sub get_realname(%) {
 	$from = $$header{'from'};
     }
     return $from;
+}
+
+sub get_lastpage() {
+    my $fh = fopen("mail.aux");
+    while (defined(my $line = <$fh>)) {
+	if ($line =~ /^\\newlabel{LastPage}{{}{(\d+)}}$/i) {
+	    return $1;
+	}
+    }
+    return 0;
 }
 
 sub format_header(%) {

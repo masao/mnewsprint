@@ -35,6 +35,12 @@
 	X-Face については、以下のサイトをご覧下さい。
 	http://www.cs.indiana.edu/ftp/faces/
 
+  ・PSUtils
+  	（2分割での出力をするのに必要です）
+	http://www.tardis.ed.ac.uk/~ajcd/psutils/
+	などから入手してください。
+
+
 2. configureスクリプトを動かす。
 
 	% ./configure	[RETURN]
