@@ -19,11 +19,11 @@ my $Tmpdir = "/tmp";
 $Tmpdir = "$ENV{'TMPDIR'}" if defined($ENV{'TMPDIR'});
 $Tmpdir .= "/mnewsprint-$$";
 
-my $File = "-";
+my $File = "-";		# default is STDIN
 
-my $PrintHeaders = "Date,From,To,Cc,Newsgroups,Subject";
+my $PrintHeaders = "date,from,to,cc,newsgroups,subject";
 
-my %Bold = ('Subject' => 1);
+my %Bold = ('subject' => 1);
 
 my %Header = ();
 my $Body = '';
@@ -42,6 +42,7 @@ sub parse_options() {
 
     GetOptions ('f|file'	      => \$File,
 		'P|printer=s'	      => \$Printer,
+		'H|header=s'	      => \$PrintHeaders,
 		'h|help'              => \$opt_help,
 		'd|debug'             => \$DEBUG,
                 'version'             => \$opt_version,
@@ -70,7 +71,7 @@ sub parse_message() {
 	}
 
 	if ($line =~ /^(\S+):\s*(.*)$/) {
-	    $Header{$1} = $2;
+	    $Header{lc($1)} = $2;
 	}
     }
     foreach my $key (keys %Header) {
@@ -78,7 +79,6 @@ sub parse_message() {
     }
     for my $line (@tmp) {
 	$line =~ s/\\/\\bs/g;
-	# $line =~ s/\$/\\\$/g;
 	$line =~ s/\{/\\\{/g;
 	$line =~ s/\}/\\\}/g;
         # Don't do that if there is an HTML tag at first.
@@ -93,7 +93,7 @@ sub parse_message() {
 
 sub create_latex() {
     my $texfile = "$Tmpdir/mail.tex";
-    my $header_str = create_header();
+    my $header_str = format_header();
 
     my $fh = fopen("> $texfile");
     print $fh <<EOF;
@@ -125,10 +125,30 @@ EOF
     }
     system("@DVIPS@ -o mail.ps mail.dvi >/dev/null");
 
-    #    system("lpr -P$Printer mail.ps");
+    # system("lpr -P$Printer mail.ps");
 
     chdir("..");
     # system("rm -rf $Tmpdir");
+}
+
+sub format_header() {
+    my $header_str = '';
+    foreach my $h (split(/,/, lc($PrintHeaders))) {
+	if (defined($Header{$h})) {
+	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
+	    $header_str .= header_ucfirst($h) . ": & ";
+	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
+	    $header_str .= "$Header{$h} \\\\\n";
+	} else {
+	    $header_str .= "\n";
+	}
+    }
+    return $header_str;
+}
+
+sub header_ucfirst($) {
+    my ($h) = @_;
+    return join('-', map { ucfirst } split('-', $h));
 }
 
 sub fopen($) {
@@ -137,22 +157,6 @@ sub fopen($) {
     $fh->open("$file") || die "$file: $!";
 
     return $fh;
-}
-
-sub create_header() {
-    my $header_str = '';
-    foreach my $h (split(/,/, $PrintHeaders)) {
-	if (defined($Header{$h})) {
-	    if (defined($Bold{$h})) {
-		$header_str .= "\\bfseries $h & \\bfseries $Header{$h} \\\\\n";
-	    } else {
-		$header_str .= "$h & $Header{$h} \\\\\n";
-	    }
-	} else {
-	    $header_str .= "\n";
-	}
-    }
-    return $header_str;
 }
 
 __END__
@@ -184,6 +188,11 @@ mnewsprintはE-mailメッセージを整形して印刷するスクリプトです。
 
 印刷すべきファイルを指定します。
 （デフォルトでは標準入力から読み込みます）
+
+=item B<-H>, -B<--header=LIST>
+
+出力すべきメール・ヘッダを指定します。
+（デフォルトでは "date,from,to,cc,newsgroups,subject" です）
 
 =back
 
