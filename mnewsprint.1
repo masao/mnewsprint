@@ -93,7 +93,7 @@
 .nr % 0
 .rr F
 .\}
-.TH MNEWSPRINT 1 "mnewsprint 0.0.1" "9/Aug/2001" "mnewsprint"
+.TH MNEWSPRINT 1 "mnewsprint 0.0.1" "18/Aug/2001" "mnewsprint"
 .UC
 .if n .hy 0
 .if n .na
@@ -190,17 +190,25 @@
 .SH "NAME"
 mnewsprint \- E\-mail メッセージの整形印刷ツール
 .SH "SYNOPSIS"
-mnewsprint [\fB--printer\fR=PRINTER] [\fB--file\fR=FILE] [\fB--help\fR] [\fB--version\fR]
+mnewsprint [\fB--printer=PRINTER\fR] [\fB--file=FILE\fR] [\fB--header=LIST\fR]
+    [\fB--help\fR] [\fB--version\fR]
 .SH "DESCRIPTION"
 mnewsprintはE\-mailメッセージを整形して印刷するスクリプトです。
 .SH "OPTIONS"
 以下のオプションを指定できます。
-.Ip "\fB\-P\fR, \fB--printer=\s-1PRINTER\s0\fR      出力するプリンタ名を指定します。 （デフォルトでは \s-1PRINTER\s0 環境変数または \*(N"lp\*(T" です）" 4
+.Ip "\fB\-P\fR, \fB--printer=\s-1PRINTER\s0\fR" 4
+出力するプリンタ名を指定します。
+（デフォルトでは \s-1PRINTER\s0 環境変数または \*(L"lp\*(R" です）
 .Ip "\fB\-f\fR, \fB--file=\s-1FILE\s0\fR" 4
 印刷すべきファイルを指定します。
 （デフォルトでは標準入力から読み込みます）
+.Ip "\fB\-H\fR, \-\fB--header=\s-1LIST\s0\fR" 4
+出力すべきメール・ヘッダを指定します。
+（デフォルトでは \*(L"date,from,to,cc,newsgroups,subject\*(R" です）
 .SH "PREREQUISITES"
 このスクリプトはメールの整形に LaTeX2e を利用します。
+.SH "NOTES"
+メールの日本語の文字コードの変換処理は行っていません。MIME 形式のメールにも未対応です。このスクリプトを利用する前に \fBnkf\fR などのコード変換ツールやメールソフトウェアを利用して EUC\-JP に変換してから渡してください。
 .SH "AUTHOR"
 高久 雅生 <masao@ulis.ac.jp>
 
@@ -216,11 +224,15 @@ mnewsprintはE\-mailメッセージを整形して印刷するスクリプトです。
 
 .IX Header "OPTIONS"
 
-.IX Item "\fB\-P\fR, \fB--printer=\s-1PRINTER\s0\fR      出力するプリンタ名を指定します。 （デフォルトでは \s-1PRINTER\s0 環境変数または \*(N"lp\*(T" です）"
+.IX Item "\fB\-P\fR, \fB--printer=\s-1PRINTER\s0\fR"
 
 .IX Item "\fB\-f\fR, \fB--file=\s-1FILE\s0\fR"
 
+.IX Item "\fB\-H\fR, \-\fB--header=\s-1LIST\s0\fR"
+
 .IX Header "PREREQUISITES"
+
+.IX Header "NOTES"
 
 .IX Header "AUTHOR"
 

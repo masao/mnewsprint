@@ -1,3 +1,7 @@
+2001-08-18  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (split_line): Add new function.
+
 2001-08-09  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Remove '#' from quotation indicators.

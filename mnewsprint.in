@@ -74,8 +74,10 @@ sub parse_message() {
 	    $Header{lc($1)} = $2;
 	}
     }
-    foreach my $key (keys %Header) {
-	print " $key -> $Header{$key}\n";
+    if (defined($DEBUG)) {
+	foreach my $key (keys %Header) {
+  	    print " $key -> $Header{$key}\n";
+	}
     }
     for my $line (@tmp) {
 	$line =~ s/\\/\\bs/g;
@@ -87,6 +89,7 @@ sub parse_message() {
 	    $line =~ s/^/\\textcolor\{q\}\{/;
 	    $line =~ s/$/\}/;
         }
+	$line = split_line($line);
 	$Body .= $line . "\n";
     }
 }
@@ -125,7 +128,7 @@ EOF
     }
     system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
 
-    system("lpr -P$Printer mail.ps");
+    system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
 
     if (!defined($DEBUG)) {
 	unlink(glob("$Tmpdir/*"));
@@ -151,6 +154,28 @@ sub format_header() {
 sub header_ucfirst($) {
     my ($h) = @_;
     return join('-', map { ucfirst } split('-', $h));
+}
+
+# Split lines to 80-chars per line.
+sub split_line($) {
+    my ($str) = @_;
+
+    my $res = '';
+    while (length($str) > 80) {
+	my $tmp = substr($str, 0, 80);
+	my $tmp2 = substr($str, 80);
+	# considering multi-byte segmentation.
+	if ($tmp =~ /\x8f$/ or $tmp =~ tr/\x8e\xa1-\xfe// % 2) {
+	    $tmp2 = chop($tmp) . $tmp2;
+	    $tmp2 = chop($tmp) . $tmp2 if ($tmp =~ /\x8f$/);
+	}
+	$res .= $tmp . "\n";
+	$str = $tmp2;
+	print "\$tmp: $tmp\n" if defined($DEBUG);
+	print "\$tmp2: $tmp2\n" if defined($DEBUG);
+    }
+    $res .= $str;
+    return $res;
 }
 
 sub fopen($) {
@@ -202,6 +227,10 @@ mnewsprintはE-mailメッセージを整形して印刷するスクリプトです。
 =head1 PREREQUISITES
 
 このスクリプトはメールの整形に LaTeX2e を利用します。
+
+=head1 NOTES
+
+メールの日本語の文字コードの変換処理は行っていません。MIME 形式のメールにも未対応です。このスクリプトを利用する前に B<nkf> などのコード変換ツールやメールソフトウェアを利用して EUC-JP に変換してから渡してください。
 
 =head1 AUTHOR
 
