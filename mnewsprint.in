@@ -121,9 +121,9 @@ EOF
 
     chdir($Tmpdir);
     for (1, 2) {
-	system("@LATEX@ -interaction=nonstopmode mail.tex");
+	system("@LATEX@ -interaction=nonstopmode mail.tex > /dev/null 2>&1");
     }
-    system("@DVIPS@ -o mail.ps mail.dvi");
+    system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
 
     system("lpr -P$Printer mail.ps");
 
@@ -140,7 +140,7 @@ sub format_header() {
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
-	    $header_str .= "$Header{$h} \\\n";
+	    $header_str .= "$Header{$h} \\\\\n";
 	} else {
 	    $header_str .= "\n";
 	}
