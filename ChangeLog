@@ -1,3 +1,9 @@
+2001-08-25  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Use Cwd
+
+	* mnewsprint.in: Introduce escape_specials()
+
 2001-08-24  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Replace '&' into '\&' in header strings

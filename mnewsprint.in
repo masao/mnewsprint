@@ -5,6 +5,7 @@
 use IO::File;
 use Getopt::Long;
 use Pod::Usage;
+use Cwd;
 
 use strict;
 
@@ -80,16 +81,14 @@ sub parse_message() {
 	}
     }
     for my $line (@tmp) {
-	$line =~ s/\{/\\\{/g;
-	$line =~ s/\}/\\\}/g;
-	$line =~ s/\\/\\bs{}/g;
+	$line = split_line($line);
+	$line = escape_specials($line);
         # Don't do that if there is an HTML tag at first.
         if ($line !~ /^[^>]*</ && 
             $line =~ /^((\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
 	    $line =~ s/^/\\textcolor\{q\}\{/;
 	    $line =~ s/$/\}/;
         }
-	$line = split_line($line);
 	$Body .= $line . "\n";
     }
 }
@@ -104,13 +103,14 @@ sub create_latex() {
 \\usepackage[T1]{fontenc}
 \\usepackage[english]{babel}
 \\usepackage[latin1]{inputenc}
+\\usepackage{cmbright}
 \\usepackage[a4paper,nohead,left=20mm,right=20mm,top=20mm,bottom=25mm]{geometry}
 \\usepackage{lastpage}
 \\makeatletter
 \\renewcommand*\\\@evenfoot{}\
 \\renewcommand*\\\@oddfoot{\\hfill Page \\thepage\\ / \\pageref{LastPage} \\strut}\
 \\makeatother
-\\usepackage{moreverb,graphicx,alltt}
+\\usepackage{graphicx,alltt}
 \\usepackage[dvips]{color}
 \\definecolor{q}{gray}{0.4}
 \\setlength{\\parindent}{0mm}
@@ -127,6 +127,7 @@ $header_str
 EOF
     close($fh);
 
+    my $cwd = getcwd();
     chdir($Tmpdir);
     for (1, 2) {
 	system("@LATEX@ -interaction=nonstopmode mail.tex");
@@ -135,6 +136,7 @@ EOF
 
     system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
 
+    chdir($cwd);
     if (!defined($DEBUG)) {
 	unlink(glob("$Tmpdir/*")) || warn "unlink: $!";
 	rmdir($Tmpdir) || warn "rmdir: $!";
@@ -145,6 +147,7 @@ sub format_header() {
     my $header_str = '';
     foreach my $h (split(/,/, lc($PrintHeaders))) {
 	if (defined($Header{$h})) {
+	    $Header{$h} =~ escape_specials($Header{$h});
 	    $Header{$h} =~ s/&/\\&/g;
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
@@ -184,6 +187,13 @@ sub split_line($) {
     return $res;
 }
 
+sub escape_specials($) {
+    my ($str) = (@_);
+    $str =~ s/\{/\\\{/g;
+    $str =~ s/\}/\\\}/g;
+    $str =~ s/\\/\\bs{}/g;
+    return $str;
+}
 sub fopen($) {
     my ($file) = @_;
     my $fh = new IO::File;
