@@ -1,3 +1,9 @@
+2001-10-07  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Add support for the base64 encoding.
+	Add a handling for the quoted-printable encoding.
+	Fix a bug that page-header strings was escaped characters dubly.
+
 2001-09-29  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in (create_latex_sub): Add a handling for

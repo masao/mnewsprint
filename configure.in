@@ -95,6 +95,17 @@ else
 *** (Perl 5.6.0 or later version includes Pod::Usage as a standard module)])
 fi
 
+AC_MSG_CHECKING(for MIME::Base64 perl module)
+if $PERL -MMIME::Base64 -e "" > /dev/null 2>&1; then
+    AC_MSG_RESULT(yes)
+    pod_usage=yes
+else
+    AC_MSG_RESULT(no)
+    AC_MSG_ERROR([
+*** the MIME::Base64 perl module is required.
+*** available from CPAN <http://search.cpan.org/search?dist=MIME-Base64>.])
+fi
+
 dnl check for compface package
 AC_PATH_PROG(UNCOMPFACE, uncompface, no)
 if test "$UNCOMPFACE" = "no"; then

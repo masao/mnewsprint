@@ -26,6 +26,8 @@ use Getopt::Long;
 use Pod::Usage;
 use Cwd;
 use Text::Tabs;
+use MIME::Base64;
+use MIME::QuotedPrint;
 
 use strict;
 
@@ -126,6 +128,13 @@ sub parse_message(@) {
 	    }
 	}
     } else {
+	if (defined($header{'content-transfer-encoding'}) &&
+	    $header{'content-transfer-encoding'} =~ /base64/) {
+	    @tmp = split("\n", decode_base64(join("\n", @tmp)));
+	} elsif (defined($header{'content-transfer-encoding'}) &&
+		 $header{'content-transfer-encoding'} =~ /quoted-printable/) {
+	    @tmp = split("\n", decode_qp(join("\n", @tmp)));
+	}
 	@tmp = expand(@tmp);
 	for my $line (@tmp) {
 	    $line =~ s/\s+$//;
@@ -149,7 +158,7 @@ sub create_latex(\%) {
     my $texfile = "$Tmpdir/mail.tex";
     my $header_str = format_header($$mail{'header'});
     my $realname = get_realname($$mail{'header'});
-    my $subject = escape_specials($$mail{'header'}{'subject'});
+    my $subject = $$mail{'header'}{'subject'};
 
     my $p_width = "145mm";
     my $face_text = "";
@@ -286,7 +295,7 @@ sub get_realname(%) {
     } else {
 	$from = $$header{'from'};
     }
-    return escape_specials($from);
+    return $from;
 }
 
 sub format_header(%) {
