@@ -1,5 +1,7 @@
 2001-10-26  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in: Version 0.0.4 released.
+
 	* mnewsprint.in (get_realname): Fix a regexp.
 
 2001-10-23  Masao Takaku  <masao@ulis.ac.jp>
