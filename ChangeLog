@@ -1,5 +1,7 @@
 2001-08-18  Masao Takaku  <masao@ulis.ac.jp>
 
+	* TODO: Add new file.
+
 	* mnewsprint.in (split_line): Add new function.
 
 2001-08-09  Masao Takaku  <masao@ulis.ac.jp>
