@@ -61,4 +61,4 @@ AC_SUBST(LATEX)
 AC_SUBST(DVIPS)
 AC_SUBST(PERL)
 
-AC_OUTPUT(Makefile mnewsprint, [chmod +x mnewsprint])
+AC_OUTPUT(Makefile tests/Makefile mnewsprint, [chmod +x mnewsprint])

@@ -8,6 +8,8 @@ man_MANS =	mnewsprint.1
 
 EXTRA_DIST =	$(man_MANS)
 
+SUBDIRS = tests
+
 $(man_MANS):	configure.in
 	pod2man --center="$(PACKAGE)" --release="$(PACKAGE) $(VERSION)" \
 		mnewsprint > mnewsprint.1

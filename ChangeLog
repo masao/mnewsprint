@@ -1,10 +1,10 @@
 2001-08-26  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in, Makefile.am, tests/*: Add test suites.
+
 	* mnewsprint.in: Change conversion rules of special character.
 
 2001-08-25  Masao Takaku  <masao@ulis.ac.jp>
-
-	* tests/*: Add test suites.
 
 	* mnewsprint.in: Exit with --version option.
 
