@@ -83,7 +83,7 @@ sub parse_message() {
 	$line =~ s/\}/\\\}/g;
         # Don't do that if there is an HTML tag at first.
         if ($line !~ /^[^>]*</ && 
-            $line =~ /^((\S{1,10}>)|(\s*[\>\|\:\#]+\s*))+/) {
+            $line =~ /^((\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
 	    $line =~ s/^/\\textcolor\{q\}\{/;
 	    $line =~ s/$/\}/;
         }

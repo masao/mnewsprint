@@ -1,5 +1,7 @@
 2001-08-09  Masao Takaku  <masao@ulis.ac.jp>
 
+	* mnewsprint.in: Remove '#' from quotation indicators.
+
 	* mnewsprint.in: Add --header option.
 
 	* mnewsprint.in: First version.
