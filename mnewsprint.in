@@ -305,8 +305,8 @@ sub get_realname(%) {
     return '' if not defined $$header{'from'};
 
     my $from = '';
-    if ($$header{'from'} =~ /^(\")?(.+)\1\s*<(\S+)\@(\S+)>/) {
-	$from = $2;
+    if ($$header{'from'} =~ /^\"?(.+)\"?\s*<(\S+)\@(\S+)>/) {
+	$from = $1;
     } elsif ($$header{'from'} =~ /^(\S+)\@(\S+)\s*\(([^)]+)\)/) {
 	$from = $3;
     } else {
