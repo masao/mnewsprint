@@ -2,32 +2,27 @@
 # -*-CPerl-*-
 # $Id$
 
-use strict;
+use IO::File;
 use Getopt::Long;
 use Pod::Usage;
 
-my $Latex = "@LATEX@";
+use strict;
 
-my $Printer = "@PRINTER@";
+my $DEBUG = undef;
+my $PACKAGE = "@PACKAGE@";
+my $VERSION = "@VERSION@";
+
+my $Printer = "lp";
 $Printer = "$ENV{'PRINTER'}" if defined($ENV{'PRINTER'});
 
 my $Tmpdir = "/tmp";
 $Tmpdir = "$ENV{'TMPDIR'}" if defined($ENV{'TMPDIR'});
 $Tmpdir .= "/mnewsprint-$$";
 
-my $File = "$Tmpdir/mail.tex";
+my $File = "-";
 
-my $DEBUG = undef;
+my $PrintHeaders = "Date,From,To,Cc,Newsgroups,Subject";
 
-my $VERSION = "@VERSION@";
-
-my @PrintHeaders = ("From",
-		    "To",
-		    "Cc",
-		    "Subject",
-		    "Date",
-		    "Message-Id",
-		    "Newsgroups");
 my %Bold = ('Subject' => 1);
 
 my %Header = ();
@@ -44,8 +39,9 @@ sub main {
 sub parse_options() {
     my $opt_help = undef;
     my $opt_version = undef;
-    GetOptions ('P|printer=s'	      => $Printer,
-		'l|latex=s'	      => $Latex,
+
+    GetOptions ('f|file'	      => \$File,
+		'P|printer=s'	      => \$Printer,
 		'h|help'              => \$opt_help,
 		'd|debug'             => \$DEBUG,
                 'version'             => \$opt_version,
@@ -54,12 +50,13 @@ sub parse_options() {
         if ($opt_help);
 
     if ($opt_version) {
-        print "imgs2html $VERSION\n";
+        print "$PACKAGE $VERSION\n";
     }
 }
 
 sub parse_message() {
-    my @tmp = <>;
+    my $fh = fopen($File);
+    my @tmp = <$fh>;
     chomp(@tmp);
     while (@tmp) {
 	my $line = shift @tmp;
@@ -80,12 +77,14 @@ sub parse_message() {
 	print " $key -> $Header{$key}\n";
     }
     for my $line (@tmp) {
+	$line =~ s/\\/\\bs/g;
+	# $line =~ s/\$/\\\$/g;
 	$line =~ s/\{/\\\{/g;
 	$line =~ s/\}/\\\}/g;
         # Don't do that if there is an HTML tag at first.
         if ($line !~ /^[^>]*</ && 
             $line =~ /^((\S{1,10}>)|(\s*[\>\|\:\#]+\s*))+/) {
-	    $line =~ s/^/\\textcolor\{citation\}\{/;
+	    $line =~ s/^/\\textcolor\{q\}\{/;
 	    $line =~ s/$/\}/;
         }
 	$Body .= $line . "\n";
@@ -93,21 +92,11 @@ sub parse_message() {
 }
 
 sub create_latex() {
-    my %PrintHeader = ();
-    foreach my $h (@PrintHeaders) {
-	if (defined($Header{$h})) {
-	    if (defined($Bold{$h})) {
-		$PrintHeader{$h} = "\\bfseries $h & \\bfseries $Header{$h} & \\\\";
-	    } else {
-		$PrintHeader{$h} = "$h & $Header{$h} & \\\\";
-	    }
-	} else {
-	    $PrintHeader{$h} = "";
-	}
-    }
+    my $texfile = "$Tmpdir/mail.tex";
+    my $header_str = create_header();
 
-    open (LATEX, ">$File") || die "can't open $File: $!";
-    print LATEX <<EOF;
+    my $fh = fopen("> $texfile");
+    print $fh <<EOF;
 \\documentclass{jarticle}
 \\usepackage[T1]{fontenc}
 \\usepackage[english]{babel}
@@ -115,31 +104,93 @@ sub create_latex() {
 \\usepackage[a4paper,nohead,left=20mm,right=20mm,top=20mm,bottom=25mm]{geometry}
 \\usepackage{moreverb,graphicx,alltt}
 \\usepackage[dvips]{color}
-\\definecolor{citation}{gray}{0.3}
+\\definecolor{q}{gray}{0.4}
 \\setlength{\\parindent}{0mm}
+\\def\\bs{\\tt\\symbol{'134}}
 \\begin{document}
 {\\large
-\\begin{tabular}[t]{rll}
-$PrintHeader{"Date"}
-$PrintHeader{"From"}
-$PrintHeader{"To"}
-$PrintHeader{"Cc"}
-$PrintHeader{"Newsgroups"}
-$PrintHeader{"Subject"}
+\\begin{tabular}[t]{rl}
+$header_str
 \\end{tabular}}
 \\hfill
 \\vspace{5mm} \\hrule \\vspace{5mm}
 \\begin{alltt}$Body\\end{alltt}
 \\end{document}
 EOF
-    close(LATEX);
+    close($fh);
 
     chdir($Tmpdir);
-    system("$Latex -interaction=nonstopmode mail.tex");
-    system("$Latex -interaction=nonstopmode mail.tex");
-    system("dvips -o mail.ps mail.dvi");
+    for (1, 2) {
+	system("@LATEX@ -interaction=nonstopmode mail.tex");
+    }
+    system("@DVIPS@ -o mail.ps mail.dvi >/dev/null");
+
     #    system("lpr -P$Printer mail.ps");
 
-    chdir("$Tmpdir/..");
+    chdir("..");
     # system("rm -rf $Tmpdir");
 }
+
+sub fopen($) {
+    my ($file) = @_;
+    my $fh = new IO::File;
+    $fh->open("$file") || die "$file: $!";
+
+    return $fh;
+}
+
+sub create_header() {
+    my $header_str = '';
+    foreach my $h (split(/,/, $PrintHeaders)) {
+	if (defined($Header{$h})) {
+	    if (defined($Bold{$h})) {
+		$header_str .= "\\bfseries $h & \\bfseries $Header{$h} \\\\\n";
+	    } else {
+		$header_str .= "$h & $Header{$h} \\\\\n";
+	    }
+	} else {
+	    $header_str .= "\n";
+	}
+    }
+    return $header_str;
+}
+
+__END__
+
+=head1 NAME
+
+mnewsprint - E-mail メッセージの整形印刷ツール
+
+=head1 SYNOPSIS
+
+mnewsprint [B<--printer>=PRINTER] [B<--file>=FILE] [B<--help>] [B<--version>]
+
+=head1 DESCRIPTION
+
+mnewsprintはE-mailメッセージを整形して印刷するスクリプトです。
+
+=head1 OPTIONS
+
+以下のオプションを指定できます。
+
+=over 4
+
+=item B<-P>, B<--printer=PRINTER>
+    
+出力するプリンタ名を指定します。
+（デフォルトでは PRINTER 環境変数または "lp" です）
+
+=item B<-f>, B<--file=FILE>
+
+印刷すべきファイルを指定します。
+（デフォルトでは標準入力から読み込みます）
+
+=back
+
+=head1 PREREQUISITES
+
+このスクリプトはメールの整形に LaTeX2e を利用します。
+
+=head1 AUTHOR
+
+高久 雅生 <masao@ulis.ac.jp>

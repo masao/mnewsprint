@@ -1,0 +1,64 @@
+dnl Process this file with autoconf to produce a configure script.
+dnl
+dnl configure for mnewsprint package.
+dnl $Id$
+dnl
+
+AC_INIT(mnewsprint.in)
+AM_INIT_AUTOMAKE(mnewsprint, 0.0.1)
+
+dnl Checks for programs.
+
+AC_PROG_INSTALL
+
+dnl Check for LaTeX2e environment
+
+AC_PATH_PROG(LATEX, platex jlatex latex tex, no)
+if test "$LATEX" = "no"; then
+    AC_MSG_ERROR([
+*** LaTeX2e environment are required. (latex)])
+fi
+
+AC_PATH_PROG(DVIPS, dvips, no)
+if test "$DVIPS" = "no"; then
+    AC_MSG_ERROR([
+*** LaTeX2e environment are required. (dvips)])
+fi
+
+dnl check for Perl5
+AC_ARG_WITH(
+    perl5,
+    [  --with-perl5=PATH       set perl5 location [search path]],
+    AC_MSG_RESULT(using $with_perl5 for perl5)
+    PERL=$with_perl5,
+    [AC_PATH_PROGS(PERL, perl5 perl, no)]
+)
+
+if test "$PERL" = "no"; then
+    AC_MSG_ERROR([
+*** Perl5 is required.
+*** available from <http://www.perl.com/>])
+fi
+
+AC_MSG_CHECKING(for Pod::Usage perl module)
+if $PERL -MPod::Usage -e "" > /dev/null 2>&1; then
+    AC_MSG_RESULT(yes)
+    pod_usage=yes
+else
+    AC_MSG_RESULT(no)
+    AC_MSG_ERROR([
+*** the Pod::Usage perl module is required.
+*** Pod::Usage is included in PodParser-X.XX.tar.gz (available from 
+*** CPAN <http://cpan.perl.com/>).
+*** (Perl 5.6.0 or later version includes Pod::Usage as a standard module)])
+fi
+
+
+
+dnl Substitutions
+
+AC_SUBST(LATEX)
+AC_SUBST(DVIPS)
+AC_SUBST(PERL)
+
+AC_OUTPUT(Makefile mnewsprint, [chmod +x mnewsprint])
