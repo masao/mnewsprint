@@ -74,6 +74,7 @@ sub parse_options() {
     my $opt_help = undef;
     my $opt_version = undef;
 
+    Getopt::Long::Configure("bundling");
     GetOptions ('f|file=s'	      => \$File,
 		'P|printer=s'	      => \$Printer,
 		'H|header=s'	      => \$PrintHeaders,

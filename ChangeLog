@@ -1,3 +1,8 @@
+2004-12-03  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Fix a problem of ignore_case option on
+	Getopt::Long module. (Report from Yoshinori Ariie, thanks)
+
 2004-09-25  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in, Makefile.am: Update copyright year.
