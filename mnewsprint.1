@@ -93,7 +93,7 @@
 .nr % 0
 .rr F
 .\}
-.TH MNEWSPRINT 1 "mnewsprint 0.4" "2/May/2002" "mnewsprint"
+.TH MNEWSPRINT 1 "mnewsprint 0.5" "27/May/2002" "mnewsprint"
 .UC
 .if n .hy 0
 .if n .na
@@ -191,7 +191,7 @@
 mnewsprint \- E\-mail メッセージの整形印刷ツール
 .SH "SYNOPSIS"
 mnewsprint [\fB--printer=PRINTER\fR] [\fB--file=FILE\fR] [\fB--header=LIST\fR]
-    [\fB--help\fR] [\fB--version\fR]
+    [\fB--psnup=OPTION\fR] [\fB--help\fR] [\fB--version\fR]
 .SH "DESCRIPTION"
 mnewsprintはE\-mailメッセージを整形して印刷するスクリプトです。
 .SH "OPTIONS"
@@ -205,6 +205,13 @@ mnewsprintはE\-mailメッセージを整形して印刷するスクリプトです。
 .Ip "\fB\-H\fR, \fB--header=\s-1LIST\s0\fR" 4
 出力すべきメール・ヘッダを指定します。
 （デフォルトでは \*(L"date,from,to,cc,newsgroups,subject\*(R" です）
+.Ip "\fB--psnup=\s-1OPTION\s0\fR" 4
+psnup コマンドを使って整形するためのオプションを指定します。
+（デフォルトでは \*(L"auto\*(R" です）
+.Sp
+\*(L"auto\*(R" の場合は、ページ数に応じて、\-2, \-4 などのレイアウトを自動的に行
+います。常に一定のレイアウトを指定したい場合は、--psnup=\-2 などのよう
+に指定してください。
 .SH "PREREQUISITES"
 このスクリプトはメールの整形に LaTeX2e を利用します。
 .SH "NOTES"
@@ -229,6 +236,8 @@ mnewsprintはE\-mailメッセージを整形して印刷するスクリプトです。
 .IX Item "\fB\-f\fR, \fB--file=\s-1FILE\s0\fR"
 
 .IX Item "\fB\-H\fR, \fB--header=\s-1LIST\s0\fR"
+
+.IX Item "\fB--psnup=\s-1OPTION\s0\fR"
 
 .IX Header "PREREQUISITES"
 
