@@ -80,9 +80,9 @@ sub parse_message() {
 	}
     }
     for my $line (@tmp) {
-	$line =~ s/\\/\\bs/g;
 	$line =~ s/\{/\\\{/g;
 	$line =~ s/\}/\\\}/g;
+	$line =~ s/\\/\\bs{}/g;
         # Don't do that if there is an HTML tag at first.
         if ($line !~ /^[^>]*</ && 
             $line =~ /^((\S{1,10}>)|(\s*[\>\|\:]+\s*))+/) {
@@ -100,11 +100,16 @@ sub create_latex() {
 
     my $fh = fopen("> $texfile");
     print $fh <<EOF;
-\\documentclass{jarticle}
+\\documentclass{jsarticle}
 \\usepackage[T1]{fontenc}
 \\usepackage[english]{babel}
 \\usepackage[latin1]{inputenc}
 \\usepackage[a4paper,nohead,left=20mm,right=20mm,top=20mm,bottom=25mm]{geometry}
+\\usepackage{lastpage}
+\\makeatletter
+\\renewcommand*\\\@evenfoot{}\
+\\renewcommand*\\\@oddfoot{\\hfill Page \\thepage\\ / \\pageref{LastPage} \\strut}\
+\\makeatother
 \\usepackage{moreverb,graphicx,alltt}
 \\usepackage[dvips]{color}
 \\definecolor{q}{gray}{0.4}
@@ -124,15 +129,15 @@ EOF
 
     chdir($Tmpdir);
     for (1, 2) {
-	system("@LATEX@ -interaction=nonstopmode mail.tex > /dev/null 2>&1");
+	system("@LATEX@ -interaction=nonstopmode mail.tex");
     }
-    system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
+    system("@DVIPS@ -o mail.ps mail.dvi");
 
     system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
 
     if (!defined($DEBUG)) {
-	unlink(glob("$Tmpdir/*"));
-	rmdir($Tmpdir);
+	unlink(glob("$Tmpdir/*")) || warn "unlink: $!";
+	rmdir($Tmpdir) || warn "rmdir: $!";
     }
 }
 

@@ -1,3 +1,8 @@
+2001-08-21  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Replace \ --> \\bs{}.
+	Usepackage{lastpage} - Add lastpage footer.
+
 2001-08-18  Masao Takaku  <masao@ulis.ac.jp>
 
 	* TODO: Add new file.
