@@ -1,12 +1,10 @@
 #!/bin/sh
 TMPDIR=.; export TMPDIR
 
-files="1 2 3 4 5"
-
 rm -rf mnewsprint-* result*
 
-for i in $files; do
-	nkf -em "msg$i" | ../mnewsprint -d > /dev/null 2>&1
+for file in msg*; do
+	nkf -em $file | ../mnewsprint -d > /dev/null 2>&1
 done;
 
 i=1
