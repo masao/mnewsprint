@@ -1,0 +1,12 @@
+#!/bin/sh
+files="1 2"
+
+for i in $files; do
+	cat "msg$i" | env TMPDIR=. ../mnewsprint -d
+done;
+
+files=`find . -type f -name 'mail.dvi' -print`
+for i in $files; do
+	xdvi $i
+done
+
