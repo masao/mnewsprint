@@ -1,4 +1,6 @@
 2001-08-31  Masao Takaku  <masao@ulis.ac.jp>
+	
+	* configure.in: Version 0.0.2 released.
 
 	* INSTALL.generic: Add a new file.
 
