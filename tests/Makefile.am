@@ -2,7 +2,7 @@
 
 TESTS =	test1
 
-MSG = msg1 msg2
+MSG = msg01 msg02
 
 clean-local:
 	rm -rf mnewsprint-* result*

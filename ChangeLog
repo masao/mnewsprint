@@ -1,5 +1,7 @@
 2002-04-13  Masao Takaku  <masao@ulis.ac.jp>
 
+	* tests/{Makefile.am,msg1,msg2}: Rename /msg*/ to /msg0*/.
+
 	* mnewsprint.in (parse_message): Fix a bug that special characters
 	is not escaped in a multipart boundary regex.
 
