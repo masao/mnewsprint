@@ -1,3 +1,7 @@
+2004-06-13  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (get_realname): Fix a regexp to get realname.
+
 2003-09-26  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.8 released.
