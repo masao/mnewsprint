@@ -134,10 +134,10 @@ sub create_latex() {
 \\rfoot{\\itshape Page \\thepage\\ / \\pageref{LastPage}}}
 \\begin{document}
 \\thispagestyle{plain}
-{\\large
+\\large
 \\begin{tabular}[t]{rp{145mm}}
 $header_str
-\\end{tabular}}
+\\end{tabular}
 \\hfill
 \\vspace{5mm} \\hrule \\vspace{5mm}
 \\begin{alltt}$Body\\end{alltt}
