@@ -51,6 +51,8 @@ $SUPPORT_XFACE = undef unless $SUPPORT_XFACE =~ /uncompface/i;
 my $SUPPORT_PSNUP = "@PSNUP@";
 $SUPPORT_PSNUP = undef unless $SUPPORT_PSNUP =~ /psnup/i;
 
+my $PsnupOpt = 'auto';
+
 my %Bold = ('subject' => 1);
 
 main();
@@ -73,12 +75,13 @@ sub parse_options() {
     GetOptions ('f|file=s'	      => \$File,
 		'P|printer=s'	      => \$Printer,
 		'H|header=s'	      => \$PrintHeaders,
+		'psnup'		      => \$PsnupOpt,
 		'h|help'              => \$opt_help,
 		'd|debug'             => \$DEBUG,
                 'version'             => \$opt_version,
                 ) || usage(1);
-    usage(0)
-        if ($opt_help);
+
+    usage(0) if ($opt_help);
 
     if ($opt_version) {
         print "$PACKAGE $VERSION\n";
@@ -306,9 +309,15 @@ sub compile_latex() {
 
     system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
 
-    if (defined($SUPPORT_PSNUP) && get_lastpage() > 1) {
-	system("$SUPPORT_PSNUP -2 mail.ps 2up.ps > /dev/null 2>&1");
-	rename("2up.ps", "mail.ps") || die "rename failed: $!";
+    if (defined($SUPPORT_PSNUP)) {
+	if ($PsnupOpt eq 'auto') {
+	    my $lastpage = get_lastpage();
+	    $PsnupOpt = "";
+	    $PsnupOpt = "-2" if $lastpage > 1;
+	    $PsnupOpt = "-4" if $lastpage > 2;
+	}
+	system("$SUPPORT_PSNUP $PsnupOpt mail.ps nup.ps > /dev/null 2>&1");
+	rename("nup.ps", "mail.ps") || die "rename failed: $!";
     }
 
     system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
@@ -435,7 +444,7 @@ mnewsprint - E-mail メッセージの整形印刷ツール
 =head1 SYNOPSIS
 
 mnewsprint [B<--printer=PRINTER>] [B<--file=FILE>] [B<--header=LIST>]
-    [B<--help>] [B<--version>]
+    [B<--psnup=OPTION>] [B<--help>] [B<--version>]
 
 =head1 DESCRIPTION
 
@@ -461,6 +470,15 @@ mnewsprintはE-mailメッセージを整形して印刷するスクリプトです。
 
 出力すべきメール・ヘッダを指定します。
 （デフォルトでは "date,from,to,cc,newsgroups,subject" です）
+
+=item B<--psnup=OPTION>
+
+psnup コマンドを使って整形するためのオプションを指定します。
+（デフォルトでは "auto" です）
+
+"auto" の場合は、ページ数に応じて、-2, -4 などのレイアウトを自動的に行
+います。常に一定のレイアウトを指定したい場合は、--psnup=-2 などのよう
+に指定してください。
 
 =back
 

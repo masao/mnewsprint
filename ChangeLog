@@ -1,3 +1,8 @@
+2002-05-27  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Add a new option "--psnup" that specify the
+	option of "psnup" command.
+
 2002-05-02  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.4 released.
