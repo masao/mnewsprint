@@ -1,5 +1,7 @@
 2003-09-26  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in: Version 0.8 released.
+
 	* mnewsprint.in (parse_options): Fix GetOptions()'s arguments
 	correctly. (Patch from Yoshinori Ariie, thanks)
 
