@@ -6,6 +6,7 @@ use IO::File;
 use Getopt::Long;
 use Pod::Usage;
 use Cwd;
+use Text::Tabs;
 
 use strict;
 
@@ -81,6 +82,7 @@ sub parse_message() {
   	    print " $key -> $Header{$key}\n";
 	}
     }
+    @tmp = expand(@tmp);
     for my $line (@tmp) {
 	$line = split_line($line);
 	$line = escape_specials($line);
@@ -102,10 +104,9 @@ sub create_latex() {
     print $fh <<EOF;
 \\documentclass{jsarticle}
 \\usepackage[T1]{fontenc}
-\\usepackage[english]{babel}
+% \\usepackage[english]{babel}
 \\usepackage[latin1]{inputenc}
-\\usepackage{times}
-# \\usepackage{cmbright}
+\\usepackage{cmbright}
 \\usepackage[a4paper,nohead,left=20mm,right=20mm,top=20mm,bottom=25mm]{geometry}
 \\usepackage{lastpage}
 \\makeatletter
@@ -117,7 +118,6 @@ sub create_latex() {
 \\definecolor{q}{gray}{0.4}
 \\def\\ast{{\\tt\\symbol{"2A}}}
 \\def\\bs{{\\tt\\symbol{"5C}}}
-\\def\\tild{\\tt\\symbol{"7E}}
 \\setlength{\\parindent}{0mm}
 \\begin{document}
 {\\large
