@@ -139,7 +139,7 @@ sub create_latex(\%) {
     my $texfile = "$Tmpdir/mail.tex";
     my $header_str = format_header($$mail{'header'});
     my $realname = get_realname($$mail{'header'});
-    my $subject = escape_specials($$mail{'header'});
+    my $subject = escape_specials($$mail{'header'}{'subject'});
 
     my $p_width = "145mm";
     my $face_text = "";
@@ -182,16 +182,18 @@ $header_str
 \\end{tabular}
 \\hfill
 $face_text
+\\vspace{5mm} \\hrule \\vspace{5mm}
 EOF
     if (ref($$mail{'body'}) =~ /^ARRAY/) {
 	foreach my $part (@{$$mail{'body'}}) {
-	    print $fh "\\vspace{5mm} \\hrule \\vspace{5mm}\n";
-	    print $fh "\\begin{alltt}$$part{'body'}\\end{alltt}\n";
+	    print $fh <<EOF;
+\\begin{alltt}$$part{'body'}\\end{alltt}
+\\vspace{3mm} \\hrule \\vspace{3mm}
+EOF
 	}
 	print $fh "\\end{document}\n";
     } else {
 	print $fh <<EOF;
-\\vspace{5mm} \\hrule \\vspace{5mm}
 \\begin{alltt}$$mail{'body'}\\end{alltt}
 \\end{document}
 EOF
