@@ -109,7 +109,7 @@ sub create_latex() {
 \\def\\bs{\\tt\\symbol{'134}}
 \\begin{document}
 {\\large
-\\begin{tabular}[t]{rl}
+\\begin{tabular}[t]{rp{145mm}}
 $header_str
 \\end{tabular}}
 \\hfill
@@ -123,12 +123,14 @@ EOF
     for (1, 2) {
 	system("@LATEX@ -interaction=nonstopmode mail.tex");
     }
-    system("@DVIPS@ -o mail.ps mail.dvi >/dev/null");
+    system("@DVIPS@ -o mail.ps mail.dvi");
 
-    # system("lpr -P$Printer mail.ps");
+    system("lpr -P$Printer mail.ps");
 
-    chdir("..");
-    # system("rm -rf $Tmpdir");
+    if (!defined($DEBUG)) {
+	unlink(glob("$Tmpdir/*"));
+	rmdir($Tmpdir);
+    }
 }
 
 sub format_header() {
@@ -138,7 +140,7 @@ sub format_header() {
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
-	    $header_str .= "$Header{$h} \\\\\n";
+	    $header_str .= "$Header{$h} \\newline\n";
 	} else {
 	    $header_str .= "\n";
 	}
@@ -167,7 +169,8 @@ mnewsprint - E-mail メッセージの整形印刷ツール
 
 =head1 SYNOPSIS
 
-mnewsprint [B<--printer>=PRINTER] [B<--file>=FILE] [B<--help>] [B<--version>]
+mnewsprint [B<--printer=PRINTER>] [B<--file=FILE>] [B<--header=LIST>]
+    [B<--help>] [B<--version>]
 
 =head1 DESCRIPTION
 
@@ -180,7 +183,7 @@ mnewsprintはE-mailメッセージを整形して印刷するスクリプトです。
 =over 4
 
 =item B<-P>, B<--printer=PRINTER>
-    
+
 出力するプリンタ名を指定します。
 （デフォルトでは PRINTER 環境変数または "lp" です）
 
