@@ -1,3 +1,7 @@
+2001-08-28  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Add a handling of some special characters.
+
 2001-08-26  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in, Makefile.am, tests/*: Add test suites.

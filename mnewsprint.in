@@ -114,8 +114,10 @@ sub create_latex() {
 \\usepackage{graphicx,alltt}
 \\usepackage[dvips]{color}
 \\definecolor{q}{gray}{0.4}
+\\def\\ast{{\\tt\\symbol{"2A}}}
+\\def\\bs{{\\tt\\symbol{"5C}}}
+\\def\\tild{\\tt\\symbol{"7E}}
 \\setlength{\\parindent}{0mm}
-\\def\\bs{\\tt\\symbol{'134}}
 \\begin{document}
 {\\large
 \\begin{tabular}[t]{rp{145mm}}
@@ -131,9 +133,9 @@ EOF
     my $cwd = getcwd();
     chdir($Tmpdir);
     for (1, 2) {
-	system("@LATEX@ -interaction=nonstopmode mail.tex");
+	system("@LATEX@ -interaction=nonstopmode mail.tex > /dev/null 2>&1");
     }
-    system("@DVIPS@ -o mail.ps mail.dvi");
+    system("@DVIPS@ -o mail.ps mail.dvi > /dev/null 2>&1");
 
     system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
 
@@ -149,8 +151,6 @@ sub format_header() {
     foreach my $h (split(/,/, lc($PrintHeaders))) {
 	if (defined($Header{$h})) {
 	    $Header{$h} = escape_specials($Header{$h});
-	    $Header{$h} =~ s/&/\\&/g;
-	    $Header{$h} =~ s/%/\\%/g;
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
@@ -190,11 +190,23 @@ sub split_line($) {
 }
 
 sub escape_specials($) {
-    my ($str) = (@_);
-    my %specials = ('\\' => '\\bs{}', '{' => '\\{', '}' => '\\}');
-    $str =~ s/([\\\{\}])/$specials{$1}/ge;
-    return $str;
+    my ($text) = (@_);
+    my %specials = ('#' => '\\#',
+		    '$' => '\\$',
+		    '&' => '\\&',
+		    '%' => '\\%',
+		    '*' => '\\ast{}',
+		    '\\' => '\\bs{}',
+		    '^' => '\\^{}',
+		    '_' => '\\_{}',
+		    '{' => '\\{',
+		    '}' => '\\}',
+		    '~' => '\\~{}',
+		   );
+    $text =~ s/([#\$&%*\\^_{}~])/$specials{$1}/ge;
+    return $text;
 }
+
 sub fopen($) {
     my ($file) = @_;
     my $fh = new IO::File;
