@@ -1,5 +1,7 @@
 2001-10-28  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in: Version 0.1 released.
+
 	* INSTALL: Up-to-date a list about required LaTeX2e packages.
 
 	* configure.in, mnewsprint.in, INSTALL : Abolish uses of
