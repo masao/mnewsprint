@@ -97,7 +97,8 @@ sub usage($) {
     print <<EOF;
 
     Usage: mnewsprint [--printer=PRINTER] [--file=FILE] [--header=LIST]
-    [--help] [--version]
+               [--psnup=(auto|none|-2|-4|...)] [--gray=NUM]
+               [--help] [--version]
 
 EOF
     exit($status);
