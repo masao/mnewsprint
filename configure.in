@@ -5,7 +5,7 @@ dnl $Id$
 dnl
 
 AC_INIT(mnewsprint.in)
-AM_INIT_AUTOMAKE(mnewsprint, 0.8)
+AM_INIT_AUTOMAKE(mnewsprint, 0.9)
 
 dnl Checks for programs.
 

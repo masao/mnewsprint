@@ -1,5 +1,7 @@
 2004-09-17  Masao Takaku  <masao@ulis.ac.jp>
 
+	* configure.in: Version 0.9 released.
+
 	* mnewsprint.in (compile_latex): Warn for --psnup's unsupported
 	options.
 
