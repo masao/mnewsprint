@@ -1,3 +1,7 @@
+2001-08-29  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Fix a bug with --file=FILE option.
+
 2001-08-28  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Add a handling of some special characters.

@@ -41,7 +41,7 @@ sub parse_options() {
     my $opt_help = undef;
     my $opt_version = undef;
 
-    GetOptions ('f|file'	      => \$File,
+    GetOptions ('f|file=s'	      => \$File,
 		'P|printer=s'	      => \$Printer,
 		'H|header=s'	      => \$PrintHeaders,
 		'h|help'              => \$opt_help,
@@ -104,7 +104,8 @@ sub create_latex() {
 \\usepackage[T1]{fontenc}
 \\usepackage[english]{babel}
 \\usepackage[latin1]{inputenc}
-\\usepackage{cmbright}
+\\usepackage{times}
+# \\usepackage{cmbright}
 \\usepackage[a4paper,nohead,left=20mm,right=20mm,top=20mm,bottom=25mm]{geometry}
 \\usepackage{lastpage}
 \\makeatletter
