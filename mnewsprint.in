@@ -131,7 +131,7 @@ sub parse_message {
     if (defined($header{'content-type'}) &&
 	$header{'content-type'} =~ m#^multipart/#i &&
 	$header{'content-type'} =~ m#boundary\s*=\s*(\"?)(.+?)\1#i) {
-	print STDERR "multipart processing ...\n";
+	print "multipart processing ...\n" if defined($DEBUG);
 	my $boundary = quotemeta($2);
 	while (@tmp) {
 	    my $line = shift @tmp;
@@ -150,6 +150,10 @@ sub parse_message {
 		push @part, $line;
 	    }
 	}
+    } elsif (defined($header{'content-type'}) &&
+	     $header{'content-type'} =~ m#^message/rfc822#i) {
+	$body = [];
+	push @{$body}, parse_message(@tmp);
     } else {
 	my $decoded_str = join("\n", @tmp);
 	if (defined($header{'content-transfer-encoding'}) &&
@@ -241,6 +245,14 @@ sub create_latex_sub {
     my ($fh, $mail) = @_;
     if (ref($$mail{'body'}) =~ /^ARRAY/) {
 	foreach my $part (@{$$mail{'body'}}) {
+	    if (defined($$mail{'header'}{'content-type'}) &&
+		$$mail{'header'}{'content-type'} =~ m#^message/rfc822#i) {
+		my $p_width = "145mm";
+		my $header_str = format_header($$part{'header'});
+		print $fh "\\begin{tabular}[t]{rp{$p_width}l}\n";
+		print $fh $header_str;
+		print $fh "\\end{tabular}\n";
+	    }
 	    create_latex_sub($fh, $part);
 	    print $fh "\\vspace{3mm} \\hrule \\vspace{3mm}";
 	}
@@ -319,6 +331,9 @@ sub compile_latex() {
 	    $PsnupOpt = "";
 	    $PsnupOpt = "-2" if $lastpage > 1;
 	    $PsnupOpt = "-4" if $lastpage > 2;
+	} elsif (!$PsnupOpt =~ /^-[0-9]+$/) {
+	    $PsnupOpt = '';
+	    warn 'psnup option format error: $PsnupOpt: $!'
 	}
 	system("$SUPPORT_PSNUP $PsnupOpt mail.ps nup.ps > /dev/null 2>&1");
 	rename("nup.ps", "mail.ps") || die "rename failed: $!";
@@ -358,9 +373,13 @@ sub get_lastpage() {
     return 0;
 }
 
-sub format_header(%) {
+sub format_header(\%) {
     my ($header) = @_;
     my $header_str = '';
+#      print STDERR "format_header():\n";
+#      foreach my $h (keys %$header) {
+#  	print STDERR "\t$h: $$header{$h}\n";
+#      }
     foreach my $h (split(/,/, lc($PrintHeaders))) {
 	if (defined($$header{$h})) {
 	    $$header{$h} = escape_specials($$header{$h});

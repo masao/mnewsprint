@@ -1,3 +1,11 @@
+2004-09-17  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (compile_latex): Warn for --psnup's unsupported
+	options.
+
+	* mnewsprint.in: Add a support for printing 'message/rfc822'-type
+	messages.
+
 2004-06-13  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in (get_realname): Fix a regexp to get realname.
