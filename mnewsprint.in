@@ -209,7 +209,7 @@ sub process_xface(%) {
     # cat face_tmp | ( echo '/* Width=48, Height=48 */' ; uncompface ) | icontopbm | pnmtops > z.ps
     my $face_decoded = `@UNCOMPFACE@ $Tmpdir/face_tmp`;
     $face_decoded =~ s/(0x|,|\s+)//gmo;
-    # $face_decoded =~ s/([0-9a-f][0-9a-f])/sprintf("%.2x",~$1)/gei;
+    $face_decoded =~ s/([0-9a-f])/sprintf("%x", hex("f") - hex($1))/gei;
     # print STDERR "$face_decoded\n";
 
     $fh = fopen("> $Tmpdir/face.ps");
