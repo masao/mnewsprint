@@ -140,7 +140,7 @@ sub format_header() {
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
-	    $header_str .= "$Header{$h} \\newline\n";
+	    $header_str .= "$Header{$h} \\\n";
 	} else {
 	    $header_str .= "\n";
 	}
