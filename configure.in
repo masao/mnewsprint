@@ -12,8 +12,13 @@ dnl Checks for programs.
 AC_PROG_INSTALL
 
 dnl Check for LaTeX2e environment
-
-AC_PATH_PROG(LATEX, platex jlatex latex tex, no)
+AC_ARG_WITH(
+    latex,
+    [  --with-latex=PATH       set latex location [search path]],
+    AC_MSG_RESULT(using $with_latex for latex)
+    LATEX=$with_latex,
+    [AC_PATH_PROGS(LATEX, platex jlatex latex tex, no)]
+)
 if test "$LATEX" = "no"; then
     AC_MSG_ERROR([
 *** LaTeX2e environment are required. (latex)])
@@ -49,11 +54,9 @@ else
     AC_MSG_ERROR([
 *** the Pod::Usage perl module is required.
 *** Pod::Usage is included in PodParser-X.XX.tar.gz (available from 
-*** CPAN <http://cpan.perl.com/>).
+*** CPAN <http://search.cpan.org/search?dist=PodParser>).
 *** (Perl 5.6.0 or later version includes Pod::Usage as a standard module)])
 fi
-
-
 
 dnl Substitutions
 

@@ -1,3 +1,10 @@
+2001-08-31  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Change a regexp for the detection of quotation
+	pieces.
+
+	* configure.in: Add a new macro looking for LATEX.
+
 2001-08-30  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in: Change formats of header and footer.

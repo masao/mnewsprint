@@ -1,12 +1,22 @@
 #!/bin/sh
+TMPDIR=.; export TMPDIR
+
 files="1 2 3 4 5"
 
-rm -rf mnewsprint-*
+rm -rf mnewsprint-* result*
 
 for i in $files; do
-	nkf -em "msg$i" | env TMPDIR=. ../mnewsprint -d
+	nkf -em "msg$i" | ../mnewsprint -d > /dev/null 2>&1
 done;
 
-for i in mnewsprint-*; do
-	xdvi $i/mail.dvi
-done;
+i=1
+for dir in mnewsprint-*; do
+	mv $dir result$i
+	i=`expr $i + 1`
+done
+
+for i in $files; do
+	grep '^!' "result$i/mail.log" && exit 1
+done
+
+exit 0

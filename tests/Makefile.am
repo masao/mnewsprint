@@ -5,6 +5,6 @@ TESTS =	test1
 MSG = msg1 msg2
 
 clean-local:
-	rm -rf mnewsprint-*
+	rm -rf mnewsprint-* result*
 
 EXTRA_DIST = $(TESTS) $(MSG)
