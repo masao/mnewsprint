@@ -1,3 +1,8 @@
+2003-09-26  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in (parse_options): Fix GetOptions()'s arguments
+	correctly. (Patch from Yoshinori Ariie, thanks)
+
 2003-09-13  Masao Takaku  <masao@ulis.ac.jp>
 
 	* mnewsprint.in (parse_message): Change a regexp for a MIME-boundary.
