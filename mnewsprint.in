@@ -52,10 +52,10 @@ sub main {
     my $fh = fopen($File);
     my @tmp = <$fh>;
     chomp(@tmp);
-    my ($body, %header) = parse_message(@tmp);
+    my $mail = parse_message(@tmp);
     fork && exit;	# Go background
     mkdir($Tmpdir, 0700) || die "can't create $Tmpdir: $!";
-    create_latex($body, %header);
+    create_latex($mail);
     compile_latex();
 }
 
@@ -113,7 +113,7 @@ sub parse_message(@) {
 	foreach my $part (@parts) {
 	    $part =~ s/^\s+//;
 	    my @tmp = split(/\n/, $part);
-	    push @{$body}, [parse_message(@tmp)];
+	    push @{$body}, parse_message(@tmp);
 	}
     } else {
 	@tmp = expand(@tmp);
@@ -131,20 +131,20 @@ sub parse_message(@) {
 	}
 	$body =~ s/\s+$//;
     }
-    return ($body, %header);
+    return {"body" => $body, "header" => \%header};
 }
 
-sub create_latex($%) {
-    my ($body, %header) = @_;
+sub create_latex(\%) {
+    my ($mail) = @_;
     my $texfile = "$Tmpdir/mail.tex";
-    my $header_str = format_header(%header);
-    my $realname = get_realname(%header);
-    my $subject = escape_specials($header{'subject'});
+    my $header_str = format_header($$mail{'header'});
+    my $realname = get_realname($$mail{'header'});
+    my $subject = escape_specials($$mail{'header'});
 
     my $p_width = "145mm";
     my $face_text = "";
-    if (defined $header{'x-face'}) {
-	$face_text = process_xface(%header);
+    if (defined $$mail{'header'}{'x-face'}) {
+	$face_text = process_xface($$mail{'header'});
 	$p_width = "125mm";
     }
     my $fh = fopen("> $texfile");
@@ -183,16 +183,16 @@ $header_str
 \\hfill
 $face_text
 EOF
-    if (ref($body) =~ /^ARRAY/) {
-	foreach my $part (@{$body}) {
+    if (ref($$mail{'body'}) =~ /^ARRAY/) {
+	foreach my $part (@{$$mail{'body'}}) {
 	    print $fh "\\vspace{5mm} \\hrule \\vspace{5mm}\n";
-	    print $fh "\\begin{alltt}$$part[0]\\end{alltt}\n";
+	    print $fh "\\begin{alltt}$$part{'body'}\\end{alltt}\n";
 	}
 	print $fh "\\end{document}\n";
     } else {
 	print $fh <<EOF;
 \\vspace{5mm} \\hrule \\vspace{5mm}
-\\begin{alltt}$body\\end{alltt}
+\\begin{alltt}$$mail{'body'}\\end{alltt}
 \\end{document}
 EOF
     }
@@ -200,9 +200,9 @@ EOF
 }
 
 sub process_xface(%) {
-    my (%header) = @_;
+    my ($header) = @_;
     my $fh = fopen("> $Tmpdir/face_tmp");
-    print $fh $header{'x-face'};
+    print $fh $$header{'x-face'};
     $fh->close;
     # cat face_tmp | ( echo '/* Width=48, Height=48 */' ; uncompface ) | icontopbm | pnmtops > z.ps
     my $face_decoded = `@UNCOMPFACE@ $Tmpdir/face_tmp`;
@@ -261,30 +261,30 @@ sub compile_latex() {
 }
 
 sub get_realname(%) {
-    my (%header) = @_;
-    return '' if not defined $header{'from'};
+    my ($header) = @_;
+    return '' if not defined $$header{'from'};
 
     my $from = '';
-    if ($header{'from'} =~ /^(\")?(.+)\1?\s*<(\S+)\@(\S+)>/) {
+    if ($$header{'from'} =~ /^(\")?(.+)\1?\s*<(\S+)\@(\S+)>/) {
 	$from = $2;
-    } elsif ($header{'from'} =~ /^(\S+)\@(\S+)\s*\(([^)]+)\)/) {
+    } elsif ($$header{'from'} =~ /^(\S+)\@(\S+)\s*\(([^)]+)\)/) {
 	$from = $3;
     } else {
-	$from = $header{'from'};
+	$from = $$header{'from'};
     }
     return escape_specials($from);
 }
 
 sub format_header(%) {
-    my (%header) = @_;
+    my ($header) = @_;
     my $header_str = '';
     foreach my $h (split(/,/, lc($PrintHeaders))) {
-	if (defined($header{$h})) {
-	    $header{$h} = escape_specials($header{$h});
+	if (defined($$header{$h})) {
+	    $$header{$h} = escape_specials($$header{$h});
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
-	    $header_str .= "$header{$h} & \\\\\n";
+	    $header_str .= "$$header{$h} & \\\\\n";
 	} else {
 	    $header_str .= "\n";
 	}
