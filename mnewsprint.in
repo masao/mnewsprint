@@ -2,7 +2,7 @@
 # -*-CPerl-*-
 # $Id$
 #
-#  Copyright (C) 2001 by Masao Takaku.
+# Copyright (C) 2001-2002 Masao Takaku All rights reserved.
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -310,7 +310,7 @@ sub compile_latex() {
 
     if (defined($SUPPORT_PSNUP) && get_lastpage() > 1) {
 	system("$SUPPORT_PSNUP -2 mail.ps 2up.ps > /dev/null 2>&1");
-	rename("2up.ps", "mailps") || die "rename failed: $!";
+	rename("2up.ps", "mail.ps") || die "rename failed: $!";
     }
 
     system("lpr -P$Printer mail.ps") if (!defined($DEBUG));
