@@ -1,14 +1,20 @@
+2001-08-26  Masao Takaku  <masao@ulis.ac.jp>
+
+	* mnewsprint.in: Change conversion rules of special character.
+
 2001-08-25  Masao Takaku  <masao@ulis.ac.jp>
 
-	* mnewsprint.in: Exit with --version option
+	* tests/*: Add test suites.
 
-	* mnewsprint.in: Use Cwd
+	* mnewsprint.in: Exit with --version option.
 
-	* mnewsprint.in: Introduce escape_specials()
+	* mnewsprint.in: Use Cwd.
+
+	* mnewsprint.in: Introduce escape_specials().
 
 2001-08-24  Masao Takaku  <masao@ulis.ac.jp>
 
-	* mnewsprint.in: Replace '&' into '\&' in header strings
+	* mnewsprint.in: Replace '&' into '\&' in header strings.
 
 2001-08-21  Masao Takaku  <masao@ulis.ac.jp>
 

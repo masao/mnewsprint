@@ -148,8 +148,9 @@ sub format_header() {
     my $header_str = '';
     foreach my $h (split(/,/, lc($PrintHeaders))) {
 	if (defined($Header{$h})) {
-	    $Header{$h} =~ escape_specials($Header{$h});
+	    $Header{$h} = escape_specials($Header{$h});
 	    $Header{$h} =~ s/&/\\&/g;
+	    $Header{$h} =~ s/%/\\%/g;
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
 	    $header_str .= header_ucfirst($h) . ": & ";
 	    $header_str .= "\\bfseries " if (defined($Bold{$h}));
@@ -190,9 +191,8 @@ sub split_line($) {
 
 sub escape_specials($) {
     my ($str) = (@_);
-    $str =~ s/\{/\\\{/g;
-    $str =~ s/\}/\\\}/g;
-    $str =~ s/\\/\\bs{}/g;
+    my %specials = ('\\' => '\\bs{}', '{' => '\\{', '}' => '\\}');
+    $str =~ s/([\\\{\}])/$specials{$1}/ge;
     return $str;
 }
 sub fopen($) {
