@@ -55,7 +55,6 @@ my %Bold = ('subject' => 1);
 
 main();
 sub main {
-    print STDERR "main\n";
     parse_options();
     my $fh = fopen($File);
     my @tmp = <$fh>;

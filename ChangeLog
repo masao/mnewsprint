@@ -1,5 +1,7 @@
 2002-03-13  Masao Takaku  <masao@ulis.ac.jp>
 
+	* mnewsprint.in: Delete a unnecessary (debug-)message.
+
 	* configure.in, mnewsprint.in, INSTALL: Add supports for PSUtils
 	and compface packages.
 
