@@ -1,3 +1,8 @@
+2006-06-04  Masao Takaku  <masao@nii.ac.jp>
+
+	* mnewsprint.in, AUTHORS, INSTALL, README: Change the author's
+	address into <masao@nii.ac.jp>.
+
 2004-12-03  Masao Takaku  <masao@ulis.ac.jp>
 
 	* configure.in: Version 0.9.1 released.
