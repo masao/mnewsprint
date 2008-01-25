@@ -131,8 +131,8 @@ sub parse_message {
     }
     if (defined($header{'content-type'}) &&
 	$header{'content-type'} =~ m#^multipart/#i &&
-	$header{'content-type'} =~ m#boundary\s*=\s*(\"?)(.+?)\1#i) {
-	print "multipart processing ...\n" if defined($DEBUG);
+	$header{'content-type'} =~ m#boundary\s*=\s*(\"?)(.+)\1#i) {
+	print "multipart processing ... $2\n" if defined($DEBUG);
 	my $boundary = quotemeta($2);
 	while (@tmp) {
 	    my $line = shift @tmp;
@@ -158,10 +158,10 @@ sub parse_message {
     } else {
 	my $decoded_str = join("\n", @tmp);
 	if (defined($header{'content-transfer-encoding'}) &&
-	    $header{'content-transfer-encoding'} =~ /base64/) {
+	    $header{'content-transfer-encoding'} =~ /base64/i) {
 	    $decoded_str = decode_base64($decoded_str);
 	} elsif (defined($header{'content-transfer-encoding'}) &&
-		 $header{'content-transfer-encoding'} =~ /quoted-printable/) {
+		 $header{'content-transfer-encoding'} =~ /quoted-printable/i) {
 	    $decoded_str = decode_qp($decoded_str);
 	}
 	if (!is_textual_message($header{'content-type'})) {
